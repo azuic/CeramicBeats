@@ -55,6 +55,7 @@ h1{
     grid-gap: 3px;
     height: 564px;
     width: 63px;
+    border-radius: 8px;
 }
 
 .beatStep.currentStep{
@@ -74,7 +75,7 @@ h1{
 }
 
 .beatStep.currentStep .beatCell.selected{
-    background-color: black;
+    background-color: #4C57FF;
 }
 
 .beatCell{

@@ -100,9 +100,14 @@ playButton.addEventListener('click',function () {
 });
 
 
-// Tone.Transport.on("stop", () => {
-//     setTimeout(() => {
-//         document.querySelectorAll("div.beatStep").classList.remove("currentStep");
-//     }, 100);
-// });
+Tone.Transport.on("stop", () => {
+    setTimeout(() => {
+        let allsteps = document.querySelectorAll("div.beatStep");
+        allsteps.forEach(each=> {
+            if (each.classList.contains("currentStep")){
+                each.classList.remove("currentStep")
+            }
+            });
+    }, 100);
+});
 
