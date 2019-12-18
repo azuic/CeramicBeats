@@ -28,7 +28,7 @@ for (let i=0; i<steps;i++){
     cellPad.appendChild(step);
 }
 
-// let soundLinks = {'fritware': "url(https://d1tutlfztia4ba.cloudfront.net/sounds/fritware.wav)",
+// let soundLinks = {'fritware': "https://d1tutlfztia4ba.cloudfront.net/sounds/fritware.wav",
 //     'other/unspecified': "https://d1tutlfztia4ba.cloudfront.net/sounds/other.wav",
 //     'terracotta': "https://d1tutlfztia4ba.cloudfront.net/sounds/terracotta.wav",
 //     'ceramic': "https://d1tutlfztia4ba.cloudfront.net/sounds/ceramic.wav",
@@ -58,20 +58,20 @@ for (let each of noteNames) {
 // sounds/ceramic.wav
 // console.log(document.querySelectorAll("div.beatStep")[0]);
 let keys = new Tone.Players(
-    {'fritware': "./sounds/fritware.wav",
-    'other/unspecified': "./sounds/other.wav",
-    'terracotta': "./sounds/ceramic.wav",
-    'pottery': "./sounds/pottery.wav",
-    'earthenware': "./sounds/earthenware.wav",
-    'stoneware': "./sounds/stoneware.wav",
-    'clay': "./sounds/clay.wav",
-    'porcelain': "./sounds/porcelain.wav"},
+    {'fritware': "https://d1tutlfztia4ba.cloudfront.net/sounds/fritware.wav",
+    'other/unspecified': "https://d1tutlfztia4ba.cloudfront.net/sounds/other.wav",
+    'terracotta': "https://d1tutlfztia4ba.cloudfront.net/sounds/terracotta.wav",
+    'ceramic': "https://d1tutlfztia4ba.cloudfront.net/sounds/ceramic.wav",
+    'pottery': "https://d1tutlfztia4ba.cloudfront.net/sounds/pottery.wav",
+    'earthenware': "https://d1tutlfztia4ba.cloudfront.net/sounds/earthenware.wav",
+    'stoneware': "https://d1tutlfztia4ba.cloudfront.net/sounds/stoneware.wav",
+    'clay': "https://d1tutlfztia4ba.cloudfront.net/sounds/clay.wav",
+    'porcelain': "https://d1tutlfztia4ba.cloudfront.net/sounds/porcelain.wav",},
     {"volume":-10,"fadeOut":"64n",}).toMaster();
 let loop = new Tone.Sequence(function(time, col){
-    console.log('here');
+    // console.log('here');
     let currentStep = document.querySelectorAll("div.beatStep")[col];
-    console.log(currentStep);
-
+    // console.log(currentStep);
     Array.prototype.forEach.call(currentStep,function(item, index){
         if (item.classList.contains("selected")){
             //slightly randomized velocities
