@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css?family=Staatliches&display=swap');
+
+body{
+    /*width:1024px;*/
+    /*height:768px;*/
+    background: black;
+}
+h1{
+    font-family: 'Staatliches', cursive;
+    color: whitesmoke;
+    font-size: 6em;
+    margin-left: 500px;
+    margin-top: 30px;
+    position: absolute;
+    z-index: 30;
+}
+#drumpad{
+    height: 650px;
+    width: 1000px;
+    position: fixed;
+}
+
+#play-button{
+    position:absolute;
+    z-index: 20;
+    background-image: url("play.png");
+    height: 80px;
+    width: 80px;
+    border-radius: 20px;
+    border: white solid 1pt;
+    background-color: black;
+    background-size: 50px 50px;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-top: 50px;
+    margin-left: 50px;
+
+}
+
+#cell-pad{
+    position: absolute;
+    z-index: 10;
+    margin-top: 180px;
+    width: 1000px;
+    display: grid;
+    grid-template-columns: repeat(16, 60px);
+    grid-gap: 3px;
+    /*grid-auto-rows: repeat(9, 60px);*/
+    height: 500px;
+}
+.beatStep{
+    flex:1;
+    display: grid;
+    grid-template-rows: repeat(9, 60px);
+    grid-gap: 3px;
+    height: 564px;
+    width: 63px;
+}
+
+.beatStep.currentStep{
+    background-color: #FFAC00;
+}
+
+.beatStep.currentStep .beatCell{
+    transition-duration: 0.4s;
+    -moz-transition-duration: 0.4s;
+    -webkit-transition-duration: 0.4s;
+}
+
+.beatStep.currentStep .beatCell.selected{
+    transition: background-color 0.1s;
+    -moz-transition: background-color 0.1s;
+    -webkit-transition: background-color 0.1s;
+}
+
+.beatStep.currentStep .beatCell.selected{
+    background-color: black;
+}
+
+.beatCell{
+    /*flex:1;*/
+    /*margin: 3px;*/
+    /*background-color: lightcyan;*/
+    transition: background-color 0s;
+    -moz-transition: background-color 0s;
+    -webkit-transition: background-color 0s;
+    width:60px;
+    height:60px;
+    background-repeat: no-repeat;
+    background-size: 50px 50px;
+    background-position: center;
+    border-radius: 3px;
+}
+
+.beatCell.selected{
+    background-color: #4C57FF;
+}
