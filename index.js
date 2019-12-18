@@ -37,6 +37,16 @@ for (let i=0; i<steps;i++){
 //     'stoneware': "https://d1tutlfztia4ba.cloudfront.net/sounds/stoneware.wav",
 //     'clay': "https://d1tutlfztia4ba.cloudfront.net/sounds/clay.wav",
 //     'porcelain': "https://d1tutlfztia4ba.cloudfront.net/sounds/porcelain.wav"};
+
+// let soundLinks = {'fritware': "./sounds/fritware.wav",
+//     'other/unspecified': "./sounds/other.wav",
+//     'terracotta': "./sounds/ceramic.wav",
+//     'pottery': "./sounds/pottery.wav",
+//     'earthenware': "./sounds/earthenware.wav",
+//     'stoneware': "./sounds/stoneware.wav",
+//     'clay': "./sounds/clay.wav",
+//     'porcelain': "./sounds/porcelain.wav"};
+
 let soundLinks ={};
 for (let each of noteNames) {
     if (each!=="other/unspecified"){
@@ -47,7 +57,16 @@ for (let each of noteNames) {
 }
 // sounds/ceramic.wav
 // console.log(document.querySelectorAll("div.beatStep")[0]);
-let keys = new Tone.Players(soundLinks,{"volume":0,"fadeOut":"64n",}).toDestination();
+let keys = new Tone.Players(
+    {'fritware': "./sounds/fritware.wav",
+    'other/unspecified': "./sounds/other.wav",
+    'terracotta': "./sounds/ceramic.wav",
+    'pottery': "./sounds/pottery.wav",
+    'earthenware': "./sounds/earthenware.wav",
+    'stoneware': "./sounds/stoneware.wav",
+    'clay': "./sounds/clay.wav",
+    'porcelain': "./sounds/porcelain.wav"},
+    {"volume":-10,"fadeOut":"64n",}).toMaster();
 let loop = new Tone.Sequence(function(time, col){
     console.log('here');
     let currentStep = document.querySelectorAll("div.beatStep")[col];
@@ -58,6 +77,7 @@ let loop = new Tone.Sequence(function(time, col){
             //slightly randomized velocities
             var vel = Math.random() * 0.5 + 0.5;
             keys.get(noteNames[index]).start(time, 0, "32n", 0, vel);
+            console.log(keys.get(noteNames[index]));
         }
     });
 
