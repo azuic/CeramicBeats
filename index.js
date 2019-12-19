@@ -76,7 +76,7 @@ let loop = new Tone.Sequence(function(time, col){
         if (item.classList.contains("selected")){
             //slightly randomized velocities
             var vel = Math.random() * 0.5 + 0.5;
-            keys.get(noteNames[index]).start(time, 0, "32n", 0, vel);
+            keys.load(noteNames[index]).start(time, 0, "32n", 0, vel);
             console.log(keys.get(noteNames[index]));
         }
     });
