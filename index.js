@@ -58,27 +58,40 @@ for (let each of noteNames) {
 // sounds/ceramic.wav
 // console.log(document.querySelectorAll("div.beatStep")[0]);
 let keys = new Tone.Players(
-    {'fritware': "./sounds/fritware.wav",
-    'other/unspecified': "./sounds/other.wav",
-    'terracotta': "./sounds/ceramic.wav",
-    'pottery': "./sounds/pottery.wav",
-    'earthenware': "./sounds/earthenware.wav",
-    'stoneware': "./sounds/stoneware.wav",
-    'clay': "./sounds/clay.wav",
-    'porcelain': "./sounds/porcelain.wav"},
+    {'fritware': "https://d1tutlfztia4ba.cloudfront.net/sounds/fritware.wav",
+    'other/unspecified': "https://d1tutlfztia4ba.cloudfront.net/sounds/other.wav",
+    'terracotta': "https://d1tutlfztia4ba.cloudfront.net/sounds/terracotta.wav",
+    'ceramic': "https://d1tutlfztia4ba.cloudfront.net/sounds/ceramic.wav",
+    'pottery': "https://d1tutlfztia4ba.cloudfront.net/sounds/pottery.wav",
+    'earthenware': "https://d1tutlfztia4ba.cloudfront.net/sounds/earthenware.wav",
+    'stoneware': "https://d1tutlfztia4ba.cloudfront.net/sounds/stoneware.wav",
+    'clay': "https://d1tutlfztia4ba.cloudfront.net/sounds/clay.wav",
+    'porcelain': "https://d1tutlfztia4ba.cloudfront.net/sounds/porcelain.wav"},
     {"volume":-10,"fadeOut":"64n",}).toMaster();
 let loop = new Tone.Sequence(function(time, col){
     // console.log('here');
     let currentStep = document.querySelectorAll("div.beatStep")[col];
     // console.log(currentStep);
-    Array.prototype.forEach.call(currentStep,function(item, index){
-        if (item.classList.contains("selected")){
-            //slightly randomized velocities
-            var vel = Math.random() * 0.5 + 0.5;
-            keys.load(noteNames[index]).start(time, 0, "32n", 0, vel);
-            console.log(keys.get(noteNames[index]));
-        }
-    });
+    let currentCells = currentStep.children;
+    for (let index=0; index<currentCells.length; index++){
+      if (currentCells[index].classList.contains("selected")){
+        console.log(index);
+        var vel = Math.random() * 0.5 + 0.5;
+        keys.get(noteNames[index]).start(time, 0, "32n", 0, vel);
+        // console.log(keys.get(noteNames[index]));
+      }
+    }
+
+    // Array.prototype.forEach.call(currentStep,function(item, index){
+    //     console.log(index);
+    //     if (item.classList.contains("selected")){
+    //         console.log(index);
+    //         //slightly randomized velocities
+    //         var vel = Math.random() * 0.5 + 0.5;
+    //         keys.get(noteNames[index]).start(time, 0, "32n", 0, vel);
+    //         console.log(keys.get(noteNames[index]));
+    //     }
+    // });
 
     let prevStep;
     if (col!==0){
@@ -129,4 +142,3 @@ Tone.Transport.on("stop", () => {
             });
     }, 100);
 });
-
