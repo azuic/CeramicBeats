@@ -1,18 +1,61 @@
+const colors={'fritware':  "#6374bf",
+    'other/unspecified': "#af9278",
+    'terracotta': "#d17538",
+    'ceramic': "#fae6cf",
+    'pottery': "#a3b39d",
+    'earthenware': "#dd9c85",
+    'stoneware': "#D9D0C8",
+    'clay': "#ccb21f",
+    'porcelain': "#abbfe0"};
 
 const steps = 16;
 const noteNames = Object.keys(alltypes);
-// console.log(noteNames);
-const objList = noteNames.map(each=>_.sampleSize(alltypes[each],16));
-// console.log(objList)
-let cellPad = document.getElementById("cell-pad");
+// const objList = noteNames.map(each=>_.sampleSize(alltypes[each],16));
+const objList = noteNames.map(each=>alltypes[each].slice(48,64));
 
+
+let controlPanel = document.querySelector("div.controls");
+// control cells
+for (let k=0; k<9; k++){
+    let control = document.createElement("div");
+    control.setAttribute("class","control-cell");
+    control.setAttribute("id",noteNames[k]);
+    let countControl = document.createElement("div");
+    countControl.setAttribute("class","control-count");
+    countControl.style.color = colors[noteNames[k]];
+    let typeSelected = document.getElementsByClassName(`beatCell ${noteNames[k]} selected`)
+    countControl.textContent = typeSelected.length;
+    control.appendChild(countControl);
+    let countTitle = document.createElement("div");
+    countTitle.setAttribute("class","control-title");
+    countTitle.style.border = `colors[noteNames[k]] solid 2px`;
+    // let titleContent = document.createElement("span");
+    countTitle.textContent = noteNames[k].toUpperCase();
+    // countTitle.appendChild(titleContent);
+    control.appendChild(countTitle);
+    controlPanel.appendChild(control);
+}
+
+let playControl = document.createElement("div");
+playControl.setAttribute("class","control-cell");
+let playButton = document.createElement("button");
+playButton.setAttribute("class","play-button");
+playControl.appendChild(playButton);
+controlPanel.appendChild(playControl);
+
+
+
+
+// drum cells
+let cellPad = document.querySelector("div.cell-pad");
+// console.log(cellPad)
 for (let i=0; i<steps;i++){
     let step = document.createElement("div");
     step.setAttribute("class","beatStep");
-    // console.log(i);
     for (let j=0; j<9; j++){
         let cell = document.createElement("div");
         cell.setAttribute("class","beatCell");
+        cell.classList.add(noteNames[j])
         cell.addEventListener("click",function (e) {
             let selectedCell = e.target;
             if (selectedCell.classList.contains("selected")){
@@ -20,32 +63,16 @@ for (let i=0; i<steps;i++){
             }else{
                 selectedCell.classList.add("selected");
             }
+            let typeSelected = document.getElementsByClassName(`beatCell ${noteNames[j]} selected`);
+            let currentCountDiv = document.getElementById(noteNames[j])
+            currentCountDiv.childNodes[0].textContent = typeSelected.length;
         })
-        // console.log(objList[j][i])
         cell.style.backgroundImage=`url(https://d1tutlfztia4ba.cloudfront.net/resize-center/${objList[j][i]}.png)`
         step.appendChild(cell);
     }
     cellPad.appendChild(step);
 }
 
-// let soundLinks = {'fritware': "https://d1tutlfztia4ba.cloudfront.net/sounds/fritware.wav",
-//     'other/unspecified': "https://d1tutlfztia4ba.cloudfront.net/sounds/other.wav",
-//     'terracotta': "https://d1tutlfztia4ba.cloudfront.net/sounds/terracotta.wav",
-//     'ceramic': "https://d1tutlfztia4ba.cloudfront.net/sounds/ceramic.wav",
-//     'pottery': "https://d1tutlfztia4ba.cloudfront.net/sounds/pottery.wav",
-//     'earthenware': "https://d1tutlfztia4ba.cloudfront.net/sounds/earthenware.wav",
-//     'stoneware': "https://d1tutlfztia4ba.cloudfront.net/sounds/stoneware.wav",
-//     'clay': "https://d1tutlfztia4ba.cloudfront.net/sounds/clay.wav",
-//     'porcelain': "https://d1tutlfztia4ba.cloudfront.net/sounds/porcelain.wav"};
-
-// let soundLinks = {'fritware': "./sounds/fritware.wav",
-//     'other/unspecified': "./sounds/other.wav",
-//     'terracotta': "./sounds/ceramic.wav",
-//     'pottery': "./sounds/pottery.wav",
-//     'earthenware': "./sounds/earthenware.wav",
-//     'stoneware': "./sounds/stoneware.wav",
-//     'clay': "./sounds/clay.wav",
-//     'porcelain': "./sounds/porcelain.wav"};
 
 let soundLinks ={};
 for (let each of noteNames) {
@@ -55,8 +82,7 @@ for (let each of noteNames) {
         soundLinks[each]=`./CeramicBeats/sounds/other.wav`;
     }
 }
-// sounds/ceramic.wav
-// console.log(document.querySelectorAll("div.beatStep")[0]);
+
 let keys = new Tone.Players(
     {'fritware': "https://d1tutlfztia4ba.cloudfront.net/sounds/fritware.wav",
     'other/unspecified': "https://d1tutlfztia4ba.cloudfront.net/sounds/other.wav",
@@ -69,29 +95,15 @@ let keys = new Tone.Players(
     'porcelain': "https://d1tutlfztia4ba.cloudfront.net/sounds/porcelain.wav"},
     {"volume":-10,"fadeOut":"64n",}).toMaster();
 let loop = new Tone.Sequence(function(time, col){
-    // console.log('here');
     let currentStep = document.querySelectorAll("div.beatStep")[col];
-    // console.log(currentStep);
     let currentCells = currentStep.children;
     for (let index=0; index<currentCells.length; index++){
       if (currentCells[index].classList.contains("selected")){
-        console.log(index);
         var vel = Math.random() * 0.5 + 0.5;
         keys.get(noteNames[index]).start(time, 0, "32n", 0, vel);
-        // console.log(keys.get(noteNames[index]));
       }
     }
 
-    // Array.prototype.forEach.call(currentStep,function(item, index){
-    //     console.log(index);
-    //     if (item.classList.contains("selected")){
-    //         console.log(index);
-    //         //slightly randomized velocities
-    //         var vel = Math.random() * 0.5 + 0.5;
-    //         keys.get(noteNames[index]).start(time, 0, "32n", 0, vel);
-    //         console.log(keys.get(noteNames[index]));
-    //     }
-    // });
 
     let prevStep;
     if (col!==0){
@@ -113,10 +125,8 @@ loop.start(0);
 
 let playing=false;
 
-let controlPanel = document.getElementById("controls");
-// controlPanel.bind(Tone.Transport);
-let playButton = document.getElementById("play-button");
-// Tone.Transport.toggle()
+// let controlPanel = document.querySelector("div.controls");
+// let playButton = document.querySelector("button.play-button");
 playButton.addEventListener('click',function () {
     Tone.start();
     if (!playing){

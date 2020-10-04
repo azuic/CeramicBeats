@@ -8,39 +8,65 @@ body{
 h1{
     font-family: 'Staatliches', cursive;
     color: whitesmoke;
-    font-size: 6em;
-    margin-left: 500px;
-    margin-top: 30px;
-    position: absolute;
-    z-index: 30;
+    font-size: 2em;
+    /* margin-left: 500px; */
+    top: 90%;
+    left: 75%;
+    position: fixed;
+    z-index: 0;
 }
-#drumpad{
+.drumpad{
     height: 650px;
     width: 1000px;
     position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.controls {
+    position: absolute;
+    display: grid;
+    grid-template-columns: repeat(10,105px);
+    z-index: 10;
+    text-align: center;
+}
+.control-cell {
+    width: 100px;
+    height: 70px;
+    display: grid;
+    grid-template-rows: 85% 15%;
 }
 
-#play-button{
-    position:absolute;
+.control-count {
+    font-size: 3em;
+}
+
+.control-title {
+    border-bottom: solid 2 px;
+    font-size: 0.5em;
+    color: white;
+}
+.play-button{
+    /* position:absolute; */
     z-index: 20;
     background-image: url("play.png");
-    height: 80px;
-    width: 80px;
-    border-radius: 20px;
-    border: white solid 1pt;
+    height: 60px;
+    width: 60px;
+    /* border-radius: 20px; */
+    border: black solid 1pt;
     background-color: black;
     background-size: 50px 50px;
     background-repeat: no-repeat;
     background-position: center;
-    margin-top: 50px;
-    margin-left: 50px;
+    /* margin-top: 50px;
+    margin-left: 50px; */
 
 }
 
-#cell-pad{
+.cell-pad{
     position: absolute;
     z-index: 10;
-    margin-top: 180px;
+    margin-top: 100px;
     width: 1000px;
     display: grid;
     grid-template-columns: repeat(16, 60px);
@@ -56,43 +82,67 @@ h1{
     height: 564px;
     width: 63px;
     border-radius: 8px;
+    opacity: 0.7;
 }
 
 .beatStep.currentStep{
-    background-color: #FFAC00;
+    /* background-color: #FFAC00; */
+    opacity: 1;
 }
 
 .beatStep.currentStep .beatCell{
-    transition-duration: 0.4s;
-    -moz-transition-duration: 0.4s;
-    -webkit-transition-duration: 0.4s;
+    transition-duration:opacity 0.4s;
+    -moz-transition-duration:opacity 0.4s;
+    -webkit-transition-duration:opacity 0.4s;
 }
 
 .beatStep.currentStep .beatCell.selected{
-    transition: background-color 0.1s;
-    -moz-transition: background-color 0.1s;
-    -webkit-transition: background-color 0.1s;
-}
-
-.beatStep.currentStep .beatCell.selected{
-    background-color: #4C57FF;
+    transition: opacity 0.4s;
+    -moz-transition: opacity 0.4s;
+    -webkit-transition: opacity 0.4s;
 }
 
 .beatCell{
-    /*flex:1;*/
-    /*margin: 3px;*/
-    /*background-color: lightcyan;*/
-    transition: background-color 0s;
-    -moz-transition: background-color 0s;
-    -webkit-transition: background-color 0s;
-    width:60px;
-    height:60px;
+    /* transition: opacity 0.1s;
+    -moz-transition: opacity 0.1s;
+    -webkit-transition: opacity 0.1s; */
+    width:58px;
+    height:58px;
     background-repeat: no-repeat;
-    background-size: 40px 40px;
+    background-size: 44px 44px;
     background-position: center;
-    border-radius: 8px;
+    border-radius: 2px;
+    /* opacity: .5; */
+}
+.beatCell.selected {
+    /* opacity: .7; */
 }
 
-.beatCell.selected{
-    background-color: #4C57FF;
+.beatCell.fritware.selected{
+    background-color: #6374bf;
+    opacity: 1;
+}
+.beatCell.other\/unspecified.selected{
+    background-color: #af9278;
+}
+.beatCell.terracotta.selected{
+    background-color: #d17538;
+}
+.beatCell.ceramic.selected{
+    background-color: #fae6cf;
+}
+.beatCell.pottery.selected{
+    background-color: #a3b39d;
+}
+.beatCell.earthenware.selected{
+    background-color: #dd9c85;
+}
+.beatCell.stoneware.selected{
+    background-color:#D9D0C8;
+}
+.beatCell.clay.selected{
+    background-color:#ccb21f;
+}
+.beatCell.porcelain.selected{
+    background-color: #abbfe0;
 }
