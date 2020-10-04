@@ -28,10 +28,12 @@ for (let k=0; k<9; k++){
     control.appendChild(countControl);
     let countTitle = document.createElement("div");
     countTitle.setAttribute("class","control-title");
-    countTitle.style.border = `colors[noteNames[k]] solid 2px`;
-    // let titleContent = document.createElement("span");
-    countTitle.textContent = noteNames[k].toUpperCase();
-    // countTitle.appendChild(titleContent);
+    // countTitle.style.borderBottom = `${colors[noteNames[k]]} solid 2px`;
+    let titleContent = document.createElement("span");
+    titleContent.style.borderBottom = `${colors[noteNames[k]]} solid 2px`;
+    titleContent.style.paddingBottom = "2px";
+    titleContent.textContent = noteNames[k].toUpperCase();
+    countTitle.appendChild(titleContent);
     control.appendChild(countTitle);
     controlPanel.appendChild(control);
 }
