@@ -43,6 +43,11 @@ playControl.setAttribute("class","control-cell");
 let playButton = document.createElement("button");
 playButton.setAttribute("class","play-button");
 playControl.appendChild(playButton);
+let playHint = document.createElement("div");
+playHint.setAttribute("class","control-title");
+playHint.textContent = "PLAY";
+// playHint.style.textAlign="left"
+playControl.appendChild(playHint);
 controlPanel.appendChild(playControl);
 
 
@@ -136,10 +141,12 @@ playButton.addEventListener('click',function () {
         Tone.Transport.start();
         playing = true;
         playButton.style.backgroundImage=`url("pause.png")`;
+        playHint.textContent="PAUSE";
     } else {
         Tone.Transport.stop();
         playButton.style.backgroundImage=`url("play.png")`;
         playing = false;
+        playHint.textContent="PLAY";
     }
 });
 
