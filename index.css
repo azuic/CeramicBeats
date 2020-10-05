@@ -52,12 +52,12 @@ h1{
     /* position:absolute; */
     z-index: 20;
     background-image: url("play.png");
-    height: 60px;
-    width: 60px;
+    height: 50px;
+    width: 50px;
     /* border-radius: 20px; */
     border: black solid 1pt;
     background-color: black;
-    background-size: 50px 50px;
+    background-size: 44px 44px;
     background-repeat: no-repeat;
     background-position: center;
     /* margin-top: 50px;
@@ -68,7 +68,7 @@ h1{
 .cell-pad{
     position: absolute;
     z-index: 10;
-    margin-top: 100px;
+    margin-top: 85px;
     width: 1000px;
     display: grid;
     grid-template-columns: repeat(16, 60px);
