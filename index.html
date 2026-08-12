@@ -1,25 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
-    <meta charset="UTF-8">
-    <title>CeramicBeats</title>
-    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
-    <link rel="stylesheet" href="./index.css"/>
-    <script src="Tone.js"></script>
-    <script src='https://cdn.jsdelivr.net/npm/lodash@4.17.5/lodash.min.js'></script>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ceramic Beats — a sequencer of Met ceramics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./index.css">
+<script src="Tone.js"></script>
 </head>
-<body backgroundColor="#000">
-<!--<script src="https://unpkg.com/unmute" data-add-button="true"></script>-->
-<script src="grouped_types.js"></script>
-<h1>Ceramic Beats Co.</h1>
-<div class="drumpad">
-    <div class="controls">
-        <!-- <button class="play-button"></button> -->
+<body>
 
+<!-- Icons are inlined rather than pulled from an icon CDN: the set is nine
+     glyphs and the page is otherwise dependency-free. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-tiles" viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" fill="currentColor" rx="1"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.14v13.72a1 1 0 0 0 1.52.85l11.14-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14z" fill="currentColor"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 4h3.2v16H7zM13.8 4H17v16h-3.2z" fill="currentColor"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="5.5" y="5.5" width="13" height="13" rx="2" fill="currentColor"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5h16M9.5 6.5V4.5h5v2M6.5 6.5l.9 12.2A1.4 1.4 0 0 0 8.8 20h6.4a1.4 1.4 0 0 0 1.4-1.3l.9-12.2"/></symbol>
+  <symbol id="i-shuffle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 4l3 3-3 3M17 14l3 3-3 3M4 7h4.2l7.6 10H20M20 7h-4.2l-1.9 2.6M4 17h4.2l1.9-2.6"/></symbol>
+  <symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v11M7.5 10.5L12 15l4.5-4.5M4.5 19.5h15"/></symbol>
+  <symbol id="i-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 9.5l5.5 5.5 5.5-5.5"/></symbol>
+  <symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="currentColor"/></symbol>
+</svg>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark"><svg class="icon icon-lg"><use href="#i-tiles"/></svg></div>
+    <div>
+      <h1>Ceramic Beats</h1>
+      <p class="brand-sub">Ceramic Sequencer</p>
     </div>
-    <div class="cell-pad"></div>
-</div>
+  </div>
 
-<script src="index.js"></script>
+  <div class="transport">
+    <button id="playBtn" class="t-play" aria-label="Play" title="Play / pause — space">
+      <svg class="icon icon-md"><use href="#i-play" id="playIcon"/></svg>
+    </button>
+    <button id="stopBtn" class="t-stop" aria-label="Stop" title="Stop">
+      <svg class="icon"><use href="#i-stop"/></svg>
+    </button>
 
+    <div class="t-rule"></div>
+
+    <div class="t-bpm">
+      <label for="bpmSlider">BPM</label>
+      <input type="range" id="bpmSlider" min="60" max="200" value="120" aria-label="Tempo">
+      <span id="bpmDisplay">120</span>
+    </div>
+
+    <div class="t-rule"></div>
+
+    <button id="clearBtn" class="t-clear" title="Clear the board">
+      <svg class="icon icon-sm"><use href="#i-trash"/></svg> Clear
+    </button>
+  </div>
+
+  <div class="actions">
+    <button id="shuffleBtn" class="btn-ghost" title="Draw a different set of objects">
+      <svg class="icon icon-sm"><use href="#i-shuffle"/></svg> Reshuffle
+    </button>
+    <div class="menu-wrap">
+      <button id="presetBtn" class="btn-ghost" aria-haspopup="true" aria-expanded="false">
+        Presets <svg class="icon icon-sm"><use href="#i-caret"/></svg>
+      </button>
+      <div id="presetMenu" class="menu" hidden></div>
+    </div>
+    <button id="saveBtn" class="btn-solid">
+      <svg class="icon icon-sm"><use href="#i-save"/></svg> Save Beat
+    </button>
+  </div>
+</header>
+
+<main>
+  <div class="glow glow-a"></div>
+  <div class="glow glow-b"></div>
+
+  <div class="board">
+    <div class="playhead-track" id="playheadTrack"></div>
+    <div class="grid" id="sequencerGrid"></div>
+  </div>
+</main>
+
+<footer class="statusbar">
+  <div class="status-left">
+    <span class="status-item"><svg class="icon icon-xs" id="engineDot"><use href="#i-dot"/></svg> <span id="engineLabel">Audio engine loading</span></span>
+    <span class="status-sep">|</span>
+    <span>4/4 Time Signature</span>
+    <span class="status-sep">|</span>
+    <span id="selectedCount">0 tiles set</span>
+  </div>
+  <div>Crops from The Met’s open collection · 44,354 objects</div>
+</footer>
+
+<div id="tooltip" class="tooltip" hidden></div>
+<div id="toast" class="toast" hidden></div>
+
+<script src="js/materials.js"></script>
+<script src="js/tiles.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/pattern.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
