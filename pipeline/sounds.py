@@ -50,12 +50,10 @@ STRIKES = {
         'dry studio, one hit only, then silence. No music, no reverb, no room tone.',
         0.6, 0.3),
     'earthenware': (
-        'One single loud knuckle rap on a porous unglazed earthenware jug, starting '
-        'at the very first instant of the recording. A hollow mid-pitched knock with '
-        'a soft woody body that rings quietly for about a quarter of a second before '
-        'dying. Close-miked in a dry studio, one hit only, then silence. '
-        'No music, no reverb, no room tone.',
-        0.6, 0.55),
+        'Knocking once on a thick unglazed earthenware water jug with a knuckle. '
+        'A dull hollow woody knock with a low ringing body that fades over a quarter '
+        'of a second. Close-miked, then silence.',
+        1.0, 0.45),
     'pottery': (
         'One single hard knock on a large empty clay pot with the knuckles, starting '
         'at the very first instant of the recording. A short, dry, low-pitched hollow '
@@ -72,20 +70,14 @@ STRIKES = {
         'knock, close-miked, then silence.',
         0.9, 0.3),
     'ceramic': (
-        'One single sharp tap on a thick glazed ceramic dinner plate with a hard '
-        'plastic pick, starting at the very first instant of the recording. A clean, '
-        'bright, high-pitched ceramic click with a short glassy ring that fades '
-        'within a third of a second. Recorded loud and close in a dry studio, one '
-        'hit only, then silence. No music, no reverb, no room tone, no background '
-        'hiss.',
-        0.7, 0.4),
+        'Tapping a glazed ceramic bowl once with a metal spoon. A clean bright tink '
+        'with a clear ringing tone that fades over a third of a second. Close-miked, '
+        'then silence.',
+        1.0, 0.45),
     'faience': (
-        'One single soft muted tap on a small glazed Egyptian faience bead, starting '
-        'at the very first instant of the recording. A short, soft, warm, rounded '
-        'click. Gentle and dull rather than sharp. No piercing high frequencies, no '
-        'metallic ring, no whistle, no hiss. Recorded loud and close in a dry studio, '
-        'one hit only, then silence. No music, no reverb, no room tone.',
-        0.5, 0.25),
+        'Tapping a small hard glazed faience tile once with a fingernail. A short '
+        'bright glassy tick with a light high ring. Close-miked, then silence.',
+        0.8, 0.3),
     'fritware': (
         'One single tap on a thin flat fritware tile with a small metal rod. A very '
         'high, brittle, glassy ping, thin and sharp, with a quick shimmering decay. '
