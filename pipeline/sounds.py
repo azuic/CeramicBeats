@@ -20,10 +20,11 @@ and peak-normalised before it lands in sounds/.
 
 import array
 import json
+import math
 import os
-import re
 import subprocess
 import sys
+import wave
 import urllib.error
 import urllib.request
 
@@ -42,11 +43,12 @@ STRIKES = {
         'No music, no reverb, no room tone.',
         0.5, 0.5),
     'terracotta': (
-        'One single knock on a thick unglazed terracotta flowerpot struck with a '
-        'wooden mallet. A dry, woody, mid-low thud that dies almost immediately, '
-        'no bell tone. Close-miked in a dry studio, one hit only, then silence. '
-        'No music, no reverb, no room tone.',
-        0.6, 0.55),
+        'One single dull knock on a thick unglazed terracotta flowerpot with a soft '
+        'wooden mallet, starting at the very first instant of the recording. A '
+        'completely dead, dry, muted low thud that stops almost instantly. No ring, '
+        'no buzz, no rattle, no metallic tail, no echo. Recorded loud and close in a '
+        'dry studio, one hit only, then silence. No music, no reverb, no room tone.',
+        0.6, 0.3),
     'earthenware': (
         'One single loud knuckle rap on a porous unglazed earthenware jug, starting '
         'at the very first instant of the recording. A hollow mid-pitched knock with '
@@ -63,11 +65,12 @@ STRIKES = {
         'No music, no reverb, no room tone, no background hiss.',
         0.9, 0.55),
     'stoneware': (
-        'One single hard strike on dense grey salt-glazed stoneware with a wooden '
-        'stick. A stony, hard, deep clunk with a short dark ring underneath it. '
-        'Close-miked in a dry studio, one hit only, then silence. '
-        'No music, no reverb, no room tone.',
-        0.9, 0.8),
+        # Long prompts stuffed with negatives ("no ring, no buzz, no hum...")
+        # reliably came back as two seconds of quiet wash with no event in
+        # them. Short, positive, physical descriptions are what land.
+        'A hammer strikes a large granite block once. One short, dry, hard stone '
+        'knock, close-miked, then silence.',
+        0.9, 0.3),
     'ceramic': (
         'One single sharp tap on a thick glazed ceramic dinner plate with a hard '
         'plastic pick, starting at the very first instant of the recording. A clean, '
@@ -77,11 +80,12 @@ STRIKES = {
         'hiss.',
         0.7, 0.4),
     'faience': (
-        'One single tick of a small glazed Egyptian faience amulet dropped once on '
-        'a stone slab. A very short, bright, brittle high tick with a tiny glassy '
-        'ping and almost no sustain. Close-miked in a dry studio, one hit only, '
-        'then silence. No music, no reverb, no room tone.',
-        0.5, 0.45),
+        'One single soft muted tap on a small glazed Egyptian faience bead, starting '
+        'at the very first instant of the recording. A short, soft, warm, rounded '
+        'click. Gentle and dull rather than sharp. No piercing high frequencies, no '
+        'metallic ring, no whistle, no hiss. Recorded loud and close in a dry studio, '
+        'one hit only, then silence. No music, no reverb, no room tone.',
+        0.5, 0.25),
     'fritware': (
         'One single tap on a thin flat fritware tile with a small metal rod. A very '
         'high, brittle, glassy ping, thin and sharp, with a quick shimmering decay. '
@@ -108,8 +112,13 @@ ORDER = ['terracotta', 'porcelain', 'earthenware', 'ceramic', 'faience',
 MIN_ASK = 2.0
 
 
+MAX_PROMPT = 450   # the API rejects anything longer
+
+
 def generate(name, key):
     prompt, seconds, _ = STRIKES[name]
+    if len(prompt) > MAX_PROMPT:
+        raise ValueError('prompt is %d chars, limit is %d' % (len(prompt), MAX_PROMPT))
     body = json.dumps({
         'text': prompt,
         'duration_seconds': max(seconds, MIN_ASK),
@@ -126,19 +135,6 @@ def generate(name, key):
         return res.read()
 
 
-def ffmpeg(args):
-    return subprocess.run(['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y'] + args,
-                          capture_output=True, text=True)
-
-
-def peak_db(path):
-    """The sample's loudest point, so it can be brought up without clipping."""
-    p = subprocess.run(['ffmpeg', '-hide_banner', '-i', path, '-af', 'volumedetect',
-                        '-f', 'null', '-'], capture_output=True, text=True)
-    m = re.search(r'max_volume:\s*(-?[\d.]+) dB', p.stderr)
-    return float(m.group(1)) if m else 0.0
-
-
 def decode(path):
     """Raw mono float samples, for deciding where the hit actually starts."""
     p = subprocess.run(['ffmpeg', '-v', 'error', '-i', path, '-ac', '1',
@@ -149,13 +145,19 @@ def decode(path):
 
 
 def onset(samples):
-    """Where the strike begins, as a time in seconds.
+    """The sample index where the strike we want begins.
 
-    An absolute silence threshold cannot do this job: these clips come back
-    anywhere from -1dB to -47dB peak, so a fixed -50dB gate is 'silence' in one
-    file and 'the hit' in the next, and the ones it guesses wrong on start up
-    to a quarter-second late — which in a step sequencer means the hit lands
-    after its own beat. Measuring against each file's own peak is scale-free.
+    An absolute silence gate cannot do this job: clips come back anywhere from
+    -1dB to -47dB peak, so a fixed -50dB threshold is 'silence' in one file and
+    'the hit' in the next, and the ones it guesses wrong start up to a quarter
+    second late — which in a sequencer means the hit lands after its own beat.
+    Everything here is measured against the clip's own peak instead.
+
+    The model also likes to answer 'one single strike' with several: a bouncing
+    object, or a row of four taps. Taking the first thing above a low gate
+    catches a quiet bounce; taking the global peak can skip a perfectly good
+    opening hit in favour of a later one. So: the first event that gets within
+    6dB of the loudest, then walk back to the foot of its attack.
     """
     hop = int(RATE * 0.002)
     env = []
@@ -165,53 +167,70 @@ def onset(samples):
             s += v * v
         env.append((s / hop) ** 0.5)
     if not env:
-        return 0.0, 0.0
+        return 0, 0.0
     peak = max(env)
     if peak <= 0:
-        return 0.0, 0.0
+        return 0, 0.0
+
+    top = next((k for k, v in enumerate(env) if v >= peak * 0.5), 0)
     gate = peak * 0.2
-    i = next((k for k, v in enumerate(env) if v >= gate), 0)
+    while top > 0 and env[top - 1] >= gate:
+        top -= 1
     # Back off a few milliseconds so the attack transient is not clipped off.
-    return max(0.0, i * hop / RATE - 0.005), peak
-
-
-def duration(path):
-    p = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration',
-                        '-of', 'csv=p=0', path], capture_output=True, text=True)
-    try:
-        return float(p.stdout.strip())
-    except ValueError:
-        return 0.0
+    return max(0, top * hop - int(0.005 * RATE)), peak
 
 
 def process(name):
-    """Trim to the attack, cap the tail, fade, normalise. Mono 44.1k WAV."""
+    """Trim to the attack, cap, fade, peak-normalise. Mono 44.1k 16-bit WAV.
+
+    Cutting is done on the decoded samples rather than by seeking the mp3:
+    ffmpeg's fast seek lands on a frame boundary, which on a sharp transient
+    is enough to shave the attack clean off and leave the hit sounding like
+    a different, quieter instrument.
+    """
     src = os.path.join(RAW, name + '.mp3')
     keep = STRIKES[name][2]
-    tmp = os.path.join(RAW, name + '.trim.wav')
     dst = os.path.join(OUT, name + '.wav')
 
-    start, _ = onset(decode(src))
-    r = ffmpeg(['-ss', '%f' % start, '-i', src, '-t', '%f' % keep,
-                '-ac', '1', '-ar', str(RATE),
-                '-af', 'afade=t=in:st=0:d=0.003', tmp])
-    if r.returncode:
-        return 'ffmpeg failed: ' + r.stderr.strip().splitlines()[-1]
+    x = decode(src)
+    if not len(x):
+        return 'no audio decoded'
 
-    # The fade has to be anchored to what the trim actually left, not to the
-    # cap we asked for: a hit that came back shorter than its cap would other-
-    # wise get no fade at all and end on a hard cut, which clicks.
-    dur = duration(tmp)
-    fade = min(0.04, dur / 4)
-    gain = -1.0 - peak_db(tmp)
-    r = ffmpeg(['-i', tmp,
-                '-af', 'volume=%.2fdB,afade=t=out:st=%f:d=%f' % (gain, max(dur - fade, 0), fade),
-                '-ac', '1', '-ar', '44100', dst])
-    os.remove(tmp)
-    if r.returncode:
-        return 'ffmpeg failed: ' + r.stderr.strip().splitlines()[-1]
-    return 'ok  %5.2fs  cut@%4.0fms  %+5.1f dB  %d KB' % (
-        dur, start * 1000, gain, os.path.getsize(dst) / 1024)
+    start, _ = onset(x)
+    seg = x[start:start + int(keep * RATE)]
+    if not len(seg):
+        return 'empty after trim'
+
+    pk = max(abs(v) for v in seg)
+    if pk <= 0:
+        return 'silent after trim'
+    gain = (10 ** (-1.0 / 20)) / pk          # leave 1dB of headroom
+
+    fade_in = int(0.003 * RATE)
+    fade_out = min(int(0.04 * RATE), len(seg) // 4)
+    out = array.array('h')
+    n = len(seg)
+    for i, v in enumerate(seg):
+        g = gain
+        if i < fade_in:
+            g *= i / fade_in
+        tail = n - i
+        if tail < fade_out:
+            g *= tail / fade_out
+        out.append(int(max(-1.0, min(1.0, v * g)) * 32767))
+
+    with wave.open(dst, 'wb') as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(RATE)
+        w.writeframes(out.tobytes())
+
+    db = 20 * math.log10(gain)
+    # A generation with no event in it is not silent, it is a quiet wash, and
+    # normalising it just makes the wash loud. Large make-up gain is the tell.
+    flag = '  <-- near-silent source, regenerate' if db > 25 else ''
+    return 'ok  %5.2fs  cut@%5.0fms  %+5.1f dB  %d KB%s' % (
+        n / RATE, start / RATE * 1000, db, os.path.getsize(dst) / 1024, flag)
 
 
 def main():
