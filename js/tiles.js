@@ -38,12 +38,6 @@ const Tiles = (() => {
     return true;
   }
 
-  /* The catalogue's own count for a material, used in the row label. */
-  function count(name) {
-    const n = S.ready && S.data.counts[name];
-    return n ? n.toLocaleString('en-US') : '';
-  }
-
   function entries(name) {
     return (S.ready && S.data.tiles[name]) || [];
   }
@@ -70,5 +64,5 @@ const Tiles = (() => {
     return 'https://www.metmuseum.org/art/collection/search/' + id;
   }
 
-  return { load, count, entries, at, position, metUrl, state: S };
+  return { load, entries, at, position, metUrl, state: S };
 })();

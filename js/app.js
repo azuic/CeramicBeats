@@ -102,6 +102,29 @@
     }
   });
 
+  // ── about ───────────────────────────────────────────────────────────────
+
+  const aboutBtn = document.getElementById('aboutBtn');
+  const aboutPanel = document.getElementById('aboutPanel');
+
+  function closeAbout() {
+    aboutPanel.hidden = true;
+    aboutBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  aboutBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    const open = aboutPanel.hidden;
+    aboutPanel.hidden = !open;
+    aboutBtn.setAttribute('aria-expanded', String(open));
+  });
+  document.addEventListener('click', e => {
+    if (!aboutPanel.hidden && !aboutPanel.contains(e.target)) closeAbout();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeAbout();
+  });
+
   // ── keys ────────────────────────────────────────────────────────────────
 
   document.addEventListener('keydown', e => {

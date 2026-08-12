@@ -34,15 +34,12 @@ const View = (() => {
       const row = document.createElement('div');
       row.className = 'row';
       row.style.setProperty('--accent', m.accent);
-      row.style.setProperty('--accent-soft', Materials.soft(m.accent));
       row.style.setProperty('--pattern', m.pattern);
       row.style.setProperty('--pattern-size', m.patternSize);
 
       const label = document.createElement('div');
       label.className = 'label';
-      label.innerHTML =
-        '<span class="label-name">' + m.name + '</span>' +
-        '<span class="label-count">' + Tiles.count(m.name) + '</span>';
+      label.innerHTML = '<span class="label-name">' + m.name + '</span>';
 
       const mute = document.createElement('button');
       mute.className = 'label-mute';

@@ -15,7 +15,6 @@
 <!-- Icons are inlined rather than pulled from an icon CDN: the set is nine
      glyphs and the page is otherwise dependency-free. -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-tiles" viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" fill="currentColor" rx="1"/></symbol>
   <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.14v13.72a1 1 0 0 0 1.52.85l11.14-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14z" fill="currentColor"/></symbol>
   <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 4h3.2v16H7zM13.8 4H17v16h-3.2z" fill="currentColor"/></symbol>
   <symbol id="i-stop" viewBox="0 0 24 24"><rect x="5.5" y="5.5" width="13" height="13" rx="2" fill="currentColor"/></symbol>
@@ -28,11 +27,7 @@
 
 <header class="topbar">
   <div class="brand">
-    <div class="brand-mark"><svg class="icon icon-lg"><use href="#i-tiles"/></svg></div>
-    <div>
-      <h1>Ceramic Beats</h1>
-      <p class="brand-sub">Ceramic Sequencer</p>
-    </div>
+    <h1>Ceramic Beats Co.</h1>
   </div>
 
   <div class="transport">
@@ -92,7 +87,27 @@
     <span class="status-sep">|</span>
     <span id="selectedCount">0 tiles set</span>
   </div>
-  <div>Crops from The Met’s open collection · 44,354 objects</div>
+  <div class="about-wrap">
+    <button id="aboutBtn" class="about-cta" aria-expanded="false" aria-controls="aboutPanel">
+      About this project
+    </button>
+    <div id="aboutPanel" class="about-panel" hidden>
+      <h2>Ceramic Beats Co.</h2>
+      <p>
+        A step sequencer built out of The Met’s open collection. Each of the nine
+        tracks is a material the museum’s own catalogue names, and every tile you
+        strike is a real object of that material, cropped from its photograph —
+        44,354 of them to draw from.
+      </p>
+      <p>
+        The sounds are strikes on the nine bodies themselves. What separates them is
+        what separates the materials: how hot each was fired, and so how long it
+        rings. Unfired clay is dead, terracotta thuds, and the vitrified bodies —
+        porcelain, faience, fritware — ring like the glass they very nearly are.
+      </p>
+      <p class="about-hint">Hover a tile to see the object · ⌥-click to open it at The Met</p>
+    </div>
+  </div>
 </footer>
 
 <div id="tooltip" class="tooltip" hidden></div>

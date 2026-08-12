@@ -83,12 +83,5 @@ const Materials = (() => {
 
   const names = LIST.map(m => m.name);
 
-  /* The accent at 55%, for the ring that reads as the glaze edge of a struck
-   * tile — a full-strength rule there fights the object underneath. */
-  function soft(hex) {
-    const n = parseInt(hex.slice(1), 16);
-    return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',0.55)';
-  }
-
-  return { list: LIST, names, count: LIST.length, soft };
+  return { list: LIST, names, count: LIST.length };
 })();
