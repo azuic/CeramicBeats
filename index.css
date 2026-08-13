@@ -33,6 +33,27 @@
 
   --sans: 'Outfit', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --serif: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+
+  /* ── the mosaic wall ──────────────────────────────────────────────────
+   * A real tiled wall changes pattern between registers rather than running
+   * one grain everywhere: a field, a border course, a panel. Each surface
+   * here takes a different motif, and the scale is chosen for how much of
+   * that surface is actually visible — big motifs need open ground, so the
+   * star lattice goes on the page and the fine grains go in the narrow
+   * places. All of them sit at very low contrast; they are ground, not
+   * pattern you are meant to look at. */
+
+  /* the wall itself: an eight-point star lattice with diamond keys */
+  --tile-zellige: url("data:image/svg+xml,%3Csvg width='44' height='44' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23c9b9a7' stroke-opacity='.28' stroke-width='1'%3E%3Crect x='9' y='9' width='26' height='26'/%3E%3Crect x='9' y='9' width='26' height='26' transform='rotate(45 22 22)'/%3E%3C/g%3E%3Cg fill='%23c9b9a7' fill-opacity='.16'%3E%3Cpath d='M0 0l4 4-4 4-4-4z'/%3E%3Cpath d='M44 0l4 4-4 4-4-4z'/%3E%3Cpath d='M0 44l4 4-4 4-4-4z'/%3E%3Cpath d='M44 44l4 4-4 4-4-4z'/%3E%3C/g%3E%3C/svg%3E");
+
+  /* border courses, top and bottom: brick set in running bond */
+  --tile-bond: url("data:image/svg+xml,%3Csvg width='24' height='12' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23cebeae' fill-opacity='.22'%3E%3Crect x='.5' y='.5' width='10.8' height='4.8' rx='1'/%3E%3Crect x='12.5' y='.5' width='10.8' height='4.8' rx='1'/%3E%3Crect x='6.5' y='6.5' width='10.8' height='4.8' rx='1'/%3E%3Crect x='-5.5' y='6.5' width='10.8' height='4.8' rx='1'/%3E%3Crect x='18.5' y='6.5' width='10.8' height='4.8' rx='1'/%3E%3C/g%3E%3C/svg%3E");
+
+  /* the bed the pads are set into: four glazed tesserae per repeat */
+  --tile-tesserae: url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cg%3E%3Crect x='.6' y='.6' width='6.8' height='6.8' rx='1.2' fill='%23d9d1c3' fill-opacity='.55'/%3E%3Crect x='8.6' y='.6' width='6.8' height='6.8' rx='1.2' fill='%23cec6b6' fill-opacity='.42'/%3E%3Crect x='.6' y='8.6' width='6.8' height='6.8' rx='1.2' fill='%23d2cabb' fill-opacity='.34'/%3E%3Crect x='8.6' y='8.6' width='6.8' height='6.8' rx='1.2' fill='%23dcd4c7' fill-opacity='.5'/%3E%3C/g%3E%3C/svg%3E");
+
+  /* small inset panels — labels, pills: a finer version of the same bed */
+  --tile-fine: url("data:image/svg+xml,%3Csvg width='8' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='.4' y='.4' width='3.2' height='3.2' rx='.7' fill='%23cebeae' fill-opacity='.20'/%3E%3Crect x='4.4' y='4.4' width='3.2' height='3.2' rx='.7' fill='%23cebeae' fill-opacity='.14'/%3E%3C/svg%3E");
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -45,7 +66,8 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
-  background: var(--clay-100);
+  background-color: var(--clay-100);
+  background-image: var(--tile-zellige);
   font-family: var(--sans);
   color: var(--clay-900);
   -webkit-font-smoothing: antialiased;
@@ -71,7 +93,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
   justify-content: space-between;
   gap: 1.5rem;
   border-bottom: 1px solid var(--clay-200);
-  background: rgba(249, 248, 246, 0.8);
+  background-color: rgba(249, 248, 246, 0.82);
+  background-image: var(--tile-bond);
   backdrop-filter: blur(4px);
   z-index: 20;
 }
@@ -95,7 +118,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  background: #fff;
+  background-color: #fff;
+  background-image: var(--tile-fine);
   padding: 0.5rem 1.5rem;
   border-radius: 9999px;
   border: 1px solid var(--clay-200);
@@ -243,12 +267,7 @@ main {
   margin: 0 auto;
   padding: 2rem;
   background-color: var(--board);
-  /* The bed the tiles are set into: mosaic tesserae, four small glazed squares
-   * per 16px with grout between them, each a slightly different tone so the
-   * field reads as hand-set rather than printed. Kept fine deliberately — the
-   * background is seen mostly through the 8px channels between pads, and any
-   * larger motif is sliced into fragments there and reads as noise. */
-  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cg%3E%3Crect x='.6' y='.6' width='6.8' height='6.8' rx='1.2' fill='%23d9d1c3' fill-opacity='.55'/%3E%3Crect x='8.6' y='.6' width='6.8' height='6.8' rx='1.2' fill='%23cec6b6' fill-opacity='.42'/%3E%3Crect x='.6' y='8.6' width='6.8' height='6.8' rx='1.2' fill='%23d2cabb' fill-opacity='.34'/%3E%3Crect x='8.6' y='8.6' width='6.8' height='6.8' rx='1.2' fill='%23dcd4c7' fill-opacity='.5'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: var(--tile-tesserae);
   border: 4px solid #fff;
   border-radius: 1.5rem;
   box-shadow: var(--board-shadow);
@@ -282,7 +301,8 @@ main {
   flex: none;
   display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
   padding: 0.5rem 0.75rem;
-  background: rgba(255,255,255,0.8);
+  background-color: rgba(255,255,255,0.82);
+  background-image: var(--tile-fine);
   backdrop-filter: blur(4px);
   border: 1px solid var(--clay-200);
   border-radius: 0.5rem;
@@ -414,7 +434,8 @@ main {
   display: flex; justify-content: space-between; align-items: center;
   font-size: 0.75rem; font-weight: 500;
   color: var(--clay-500);
-  background: rgba(249,248,246,0.5);
+  background-color: rgba(249,248,246,0.6);
+  background-image: var(--tile-bond);
   z-index: 20;
 }
 .status-left { display: flex; align-items: center; gap: 1rem; }
