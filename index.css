@@ -52,8 +52,6 @@
   /* the bed the pads are set into: four glazed tesserae per repeat */
   --tile-tesserae: url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cg%3E%3Crect x='.6' y='.6' width='6.8' height='6.8' rx='1.2' fill='%23d9d1c3' fill-opacity='.55'/%3E%3Crect x='8.6' y='.6' width='6.8' height='6.8' rx='1.2' fill='%23cec6b6' fill-opacity='.42'/%3E%3Crect x='.6' y='8.6' width='6.8' height='6.8' rx='1.2' fill='%23d2cabb' fill-opacity='.34'/%3E%3Crect x='8.6' y='8.6' width='6.8' height='6.8' rx='1.2' fill='%23dcd4c7' fill-opacity='.5'/%3E%3C/g%3E%3C/svg%3E");
 
-  /* small inset panels — labels, pills: a finer version of the same bed */
-  --tile-fine: url("data:image/svg+xml,%3Csvg width='8' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='.4' y='.4' width='3.2' height='3.2' rx='.7' fill='%23cebeae' fill-opacity='.20'/%3E%3Crect x='4.4' y='4.4' width='3.2' height='3.2' rx='.7' fill='%23cebeae' fill-opacity='.14'/%3E%3C/svg%3E");
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -119,7 +117,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
   align-items: center;
   gap: 1.5rem;
   background-color: #fff;
-  background-image: var(--tile-fine);
   padding: 0.5rem 1.5rem;
   border-radius: 9999px;
   border: 1px solid var(--clay-200);
@@ -201,11 +198,11 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .btn-ghost {
   border: 1px solid var(--clay-300);
-  background: transparent;
+  background-color: #fff;
   color: var(--clay-700);
 }
-.btn-ghost:hover { background: var(--clay-200); }
-.btn-ghost[aria-expanded="true"] { background: var(--clay-200); }
+.btn-ghost:hover { background-color: var(--clay-100); }
+.btn-ghost[aria-expanded="true"] { background-color: var(--clay-200); }
 .btn-solid {
   border: 0;
   background: var(--clay-900);
@@ -301,9 +298,7 @@ main {
   flex: none;
   display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
   padding: 0.5rem 0.75rem;
-  background-color: rgba(255,255,255,0.82);
-  background-image: var(--tile-fine);
-  backdrop-filter: blur(4px);
+  background-color: #fff;
   border: 1px solid var(--clay-200);
   border-radius: 0.5rem;
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
