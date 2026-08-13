@@ -243,8 +243,12 @@ main {
   margin: 0 auto;
   padding: 2rem;
   background-color: var(--board);
-  /* the grout: a 4px tile of lighter mortar between the pads */
-  background-image: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h4v4H0V0zm1 1h2v2H1V1z' fill='%23d0c9bd' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+  /* The bed the tiles are set into: mosaic tesserae, four small glazed squares
+   * per 16px with grout between them, each a slightly different tone so the
+   * field reads as hand-set rather than printed. Kept fine deliberately — the
+   * background is seen mostly through the 8px channels between pads, and any
+   * larger motif is sliced into fragments there and reads as noise. */
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cg%3E%3Crect x='.6' y='.6' width='6.8' height='6.8' rx='1.2' fill='%23d9d1c3' fill-opacity='.55'/%3E%3Crect x='8.6' y='.6' width='6.8' height='6.8' rx='1.2' fill='%23cec6b6' fill-opacity='.42'/%3E%3Crect x='.6' y='8.6' width='6.8' height='6.8' rx='1.2' fill='%23d2cabb' fill-opacity='.34'/%3E%3Crect x='8.6' y='8.6' width='6.8' height='6.8' rx='1.2' fill='%23dcd4c7' fill-opacity='.5'/%3E%3C/g%3E%3C/svg%3E");
   border: 4px solid #fff;
   border-radius: 1.5rem;
   box-shadow: var(--board-shadow);
