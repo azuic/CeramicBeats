@@ -136,12 +136,6 @@ Scale follows visibility — the board's background is seen almost entirely
 through the 8px channels between pads, so a large motif is sliced into fragments
 there and only works on open ground.
 
-## Legacy
-
-`index.js`, `grouped_types.js`, `play.png` and `pause.png` are the original
-2019 implementation and are no longer referenced by `index.html`. Likewise
-`sounds/{3,7,10,other}.wav`. They are kept for now, not used.
-
 ---
 
 Images and object data from
