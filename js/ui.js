@@ -37,9 +37,10 @@ const View = (() => {
       row.style.setProperty('--pattern', m.pattern);
       row.style.setProperty('--pattern-size', m.patternSize);
 
+      // The label is a line off the lookbook's catalogue panel: the dot, the
+      // material, and how many objects the museum files under it.
       const label = document.createElement('div');
       label.className = 'label';
-      label.innerHTML = '<span class="label-name">' + m.name + '</span>';
 
       const mute = document.createElement('button');
       mute.className = 'label-mute';
@@ -50,6 +51,19 @@ const View = (() => {
         row.classList.toggle('muted', Pattern.muted(t));
       });
       label.appendChild(mute);
+
+      const name = document.createElement('span');
+      name.className = 'label-name';
+      name.textContent = m.name;
+      label.appendChild(name);
+
+      const count = Tiles.count(m.name);
+      if (count) {
+        const n = document.createElement('span');
+        n.className = 'label-count';
+        n.textContent = count.toLocaleString('en-US');
+        label.appendChild(n);
+      }
       row.appendChild(label);
 
       const pads = document.createElement('div');
@@ -186,6 +200,57 @@ const View = (() => {
     el('selectedCount').textContent = n === 1 ? '1 tile set' : n + ' tiles set';
   }
 
+  // ── the sample's name ───────────────────────────────────────────────────
+  //
+  // Printed under the tiles the way a swatch card names its glaze, and
+  // written straight onto the card: click it and type.
+
+  const NAME_MAX = 40;
+
+  function cleanName(text) {
+    return (text || '').replace(/\s+/g, ' ').trim().slice(0, NAME_MAX) || 'untitled';
+  }
+
+  function setName(name) {
+    const node = el('swatchName');
+    node.textContent = cleanName(name);
+    document.title = node.textContent === 'untitled'
+      ? 'Ceramic Beats — a sequencer of Met ceramics'
+      : node.textContent + ' — Ceramic Beats';
+  }
+
+  function getName() {
+    return cleanName(el('swatchName').textContent);
+  }
+
+  function wireName(onRename) {
+    const node = el('swatchName');
+    let before = '';
+
+    node.addEventListener('focus', () => {
+      before = node.textContent;
+      // A fresh card invites a name rather than making you delete "untitled".
+      if (before === 'untitled') node.textContent = '';
+    });
+    node.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); node.blur(); }
+      if (e.key === 'Escape') { node.textContent = before; node.blur(); }
+      // the sequencer's own shortcut must not fire while you are typing
+      e.stopPropagation();
+    });
+    // Browsers without plaintext-only editing would paste markup in.
+    node.addEventListener('paste', e => {
+      e.preventDefault();
+      const text = (e.clipboardData || window.clipboardData).getData('text');
+      document.execCommand('insertText', false, text.replace(/\s+/g, ' '));
+    });
+    node.addEventListener('blur', () => {
+      const name = getName();
+      setName(name);
+      if (name !== before && onRename) onRename(name);
+    });
+  }
+
   function setReady(ready) {
     el('engineDot').classList.toggle('ready', ready);
     el('engineLabel').textContent = ready ? 'Audio engine ready' : 'Audio engine loading';
@@ -269,7 +334,7 @@ const View = (() => {
 
   return {
     build, paint, paintAll, light, unlight,
-    setPlaying, setBpm, setCount, setReady, toast, buildPresets,
+    setPlaying, setBpm, setCount, setName, getName, wireName, setReady, toast, buildPresets,
     set hooks(h) { S.hooks = h; },
   };
 })();

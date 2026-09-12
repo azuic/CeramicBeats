@@ -32,11 +32,17 @@ ring from 55ms to 239ms.
 | ⌥-click a pad | open that object at The Met |
 | the circle in a row label | mute the track |
 | Reshuffle | draw a different set of objects for every row |
+| the name under the tiles | click it and type to name the beat |
 | Save Beat | copy a link that *is* the beat |
 
 Save Beat packs the whole arrangement into 30 bytes in the URL fragment: the
-grid, the tempo, the mutes, and each row's crop rotation. A saved beat needs no
-server and no storage.
+grid, the tempo, the mutes, and each row's crop rotation. The beat's name rides
+beside it, so whoever opens the link sees the card as it was named. A saved
+beat needs no server and no storage.
+
+A preset lends the beat its name until the beat stops being that preset: the
+first change to the grid turns "kiln floor" into "kiln floor variation", and
+from there the name is yours to set.
 
 ## Running it
 
@@ -129,13 +135,25 @@ is the gap between the two:
 
 ## A note on the layout
 
-The design is a mosaic wall, and a real tiled wall changes pattern between
-registers instead of running one grain everywhere. There are four motifs,
-defined as tokens in `:root`: a zellige star lattice on the page, brick in
-running bond for the header and footer courses, tesserae in the board, and
-nothing at all behind the controls. Scale follows visibility. You see the
-board's background almost entirely through the 8px channels between pads, where
-a large motif gets sliced into fragments; it only works on open ground.
+The page is a glaze manufacturer's sample card, edge to edge: card stock with a
+grid of glass tiles glued to it, the sample's name set large underneath, the
+small print, and the maker's mark in the corner. Each tile is drawn as glass
+over the object's crop — a hairline rim, a raked band of light down the top and
+left edges where the bevel catches the room, and a shade gathering in the
+opposite corner. An unstruck tile is the same glass over blank bisque, so the
+card reads as a full sheet of samples with most of them still unglazed. A tile
+is as large as the width allows unless the height allows less, so the sheet
+fills the card without the card having to scroll.
+
+Everything around the card borrows the printed-ephemera language of
+[the-met-ceramics-lookbook](https://github.com/azuic/the-met-ceramics-lookbook),
+which this is the companion piece to: the same paper and card stock, the same
+ink and stamp red, and the same three faces (Bodoni Moda for the name and the
+mark, Libre Baskerville for the catalogue values, IBM Plex Mono for the small
+print). The row labels are lines off the lookbook's catalogue panel, dot and
+count included; the controls are its keycaps; the status reads off a receipt
+stub set slightly off-square. The two are meant to sit side by side as a pair,
+not as the same page twice.
 
 ---
 

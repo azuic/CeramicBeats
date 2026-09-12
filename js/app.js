@@ -10,16 +10,47 @@
 
   // A shared link wins over the default beat; otherwise open on something
   // playable, because an empty grid teaches nobody what the thing does.
-  const link = new URLSearchParams(location.hash.slice(1)).get('b');
-  if (!link || !Pattern.decode(link)) {
+  const params = new URLSearchParams(location.hash.slice(1));
+  const link = params.get('b');
+  const shared = !!(link && Pattern.decode(link));
+  if (!shared) {
     Pattern.apply(Pattern.presets[0]);
     Pattern.reshuffle(Tiles.state.perMaterial);
   }
 
   View.build();
+
+  // ── the name ────────────────────────────────────────────────────────────
+  //
+  // A preset lends the beat its name until the beat stops being that preset:
+  // the first change to the grid turns "kiln floor" into "kiln floor
+  // variation", once, and from there the name is the user's to set. A name
+  // typed onto the card is never touched again.
+
+  let nameIsPreset = false;
+
+  function namePreset(preset) {
+    View.setName(preset.name);
+    nameIsPreset = true;
+  }
+
+  if (shared) {
+    View.setName(params.get('n') || 'shared beat');
+  } else {
+    namePreset(Pattern.presets[0]);
+  }
+
+  View.wireName(() => { nameIsPreset = false; });
+
   View.hooks = {
     tap: t => { if (!Kiln.playing && !Pattern.muted(t)) Kiln.tap(t); },
-    changed: View.setCount,
+    changed: () => {
+      View.setCount();
+      if (nameIsPreset) {
+        View.setName(View.getName() + ' variation');
+        nameIsPreset = false;
+      }
+    },
   };
   View.paintAll();
   View.setBpm(Pattern.bpm);
@@ -71,6 +102,8 @@
   document.getElementById('clearBtn').addEventListener('click', () => {
     Pattern.clear();
     View.paintAll();
+    View.setName('untitled');
+    nameIsPreset = false;
   });
 
   // ── the header's right hand ─────────────────────────────────────────────
@@ -87,11 +120,16 @@
     Kiln.setBpm(Pattern.bpm);
     View.paintAll();
     View.setBpm(Pattern.bpm);
+    namePreset(preset);
     View.toast(preset.name);
   });
 
+  // The name rides in the link beside the beat, so whoever opens it sees the
+  // card as it was named.
   document.getElementById('saveBtn').addEventListener('click', async () => {
-    const hash = '#b=' + Pattern.encode();
+    const name = View.getName();
+    const hash = '#b=' + Pattern.encode() +
+      (name === 'untitled' ? '' : '&n=' + encodeURIComponent(name));
     const url = location.origin + location.pathname + hash;
     history.replaceState(null, '', hash);
     try {
@@ -128,7 +166,7 @@
   // ── keys ────────────────────────────────────────────────────────────────
 
   document.addEventListener('keydown', e => {
-    if (e.target.matches('input, textarea')) return;
+    if (e.target.matches('input, textarea, [contenteditable]')) return;
     if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
   });
 

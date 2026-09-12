@@ -6,8 +6,8 @@
 <title>Ceramic Beats — a sequencer of Met ceramics</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./index.css">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./index.css?v=3">
 <script src="Tone.js"></script>
 </head>
 <body>
@@ -26,22 +26,18 @@
 </svg>
 
 <header class="topbar">
-  <div class="brand">
-    <h1>Ceramic Beats Co.</h1>
-  </div>
-
-  <div class="transport">
+  <div class="transport module">
     <button id="playBtn" class="t-play" aria-label="Play" title="Play / pause — space">
       <svg class="icon icon-md"><use href="#i-play" id="playIcon"/></svg>
     </button>
     <button id="stopBtn" class="t-stop" aria-label="Stop" title="Stop">
-      <svg class="icon"><use href="#i-stop"/></svg>
+      <svg class="icon icon-sm"><use href="#i-stop"/></svg>
     </button>
 
     <div class="t-rule"></div>
 
     <div class="t-bpm">
-      <label for="bpmSlider">BPM</label>
+      <label for="bpmSlider">Tempo</label>
       <input type="range" id="bpmSlider" min="60" max="200" value="120" aria-label="Tempo">
       <span id="bpmDisplay">120</span>
     </div>
@@ -54,28 +50,48 @@
   </div>
 
   <div class="actions">
-    <button id="shuffleBtn" class="btn-ghost" title="Draw a different set of objects">
+    <button id="shuffleBtn" class="key" title="Draw a different set of objects">
       <svg class="icon icon-sm"><use href="#i-shuffle"/></svg> Reshuffle
     </button>
     <div class="menu-wrap">
-      <button id="presetBtn" class="btn-ghost" aria-haspopup="true" aria-expanded="false">
+      <button id="presetBtn" class="key" aria-haspopup="true" aria-expanded="false">
         Presets <svg class="icon icon-sm"><use href="#i-caret"/></svg>
       </button>
       <div id="presetMenu" class="menu" hidden></div>
     </div>
-    <button id="saveBtn" class="btn-solid">
+    <button id="saveBtn" class="key key--ink">
       <svg class="icon icon-sm"><use href="#i-save"/></svg> Save Beat
     </button>
   </div>
 </header>
 
 <main>
-  <div class="glow glow-a"></div>
-  <div class="glow glow-b"></div>
+  <!-- The sample card. The tiles are glued to a sheet of the whitest stock,
+       and the card is printed underneath the way a glaze manufacturer's
+       swatch card is: the sample's name, the small print, the maker's mark. -->
+  <div class="card">
+    <div class="field">
+      <div class="playhead-track" id="playheadTrack"></div>
+      <div class="grid" id="sequencerGrid"></div>
+    </div>
 
-  <div class="board">
-    <div class="playhead-track" id="playheadTrack"></div>
-    <div class="grid" id="sequencerGrid"></div>
+    <div class="card-foot">
+      <div>
+        <h1 class="swatch-name" id="swatchName" contenteditable="plaintext-only" spellcheck="false" title="Click to name this beat" aria-label="Beat name">untitled</h1>
+        <p class="card-note">
+          <b>Ceramic Beats</b> samples show true sound only.
+          <em>Natural variations may occur between reshuffles.</em>
+        </p>
+        <p class="card-contact">
+          9 materials · 144 tiles · 44,354 objects<br>
+          <a href="https://www.metmuseum.org/art/collection" target="_blank" rel="noopener">metmuseum.org/art/collection</a>
+        </p>
+      </div>
+      <div class="mark">
+        <p class="mark-name">Ceramic <i>Beats</i> Co.</p>
+        <p class="mark-sub">Open access<br>The Metropolitan Museum of Art</p>
+      </div>
+    </div>
   </div>
 </main>
 
@@ -83,7 +99,7 @@
   <div class="status-left">
     <span class="status-item"><svg class="icon icon-xs" id="engineDot"><use href="#i-dot"/></svg> <span id="engineLabel">Audio engine loading</span></span>
     <span class="status-sep">|</span>
-    <span>4/4 Time Signature</span>
+    <span>4/4 time</span>
     <span class="status-sep">|</span>
     <span id="selectedCount">0 tiles set</span>
   </div>
@@ -114,10 +130,10 @@
 <div id="toast" class="toast" hidden></div>
 
 <script src="js/materials.js"></script>
-<script src="js/tiles.js"></script>
+<script src="js/tiles.js?v=2"></script>
 <script src="js/audio.js"></script>
 <script src="js/pattern.js"></script>
-<script src="js/ui.js"></script>
-<script src="js/app.js"></script>
+<script src="js/ui.js?v=3"></script>
+<script src="js/app.js?v=3"></script>
 </body>
 </html>

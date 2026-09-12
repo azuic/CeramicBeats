@@ -42,6 +42,11 @@ const Tiles = (() => {
     return (S.ready && S.data.tiles[name]) || [];
   }
 
+  /* How many objects the catalogue files under the material, for the label. */
+  function count(name) {
+    return (S.ready && S.data.counts && S.data.counts[name]) || 0;
+  }
+
   /* Which of the material's 32 objects sits at this step, given the row's
    * current rotation. */
   function at(name, step, offset) {
@@ -64,5 +69,5 @@ const Tiles = (() => {
     return 'https://www.metmuseum.org/art/collection/search/' + id;
   }
 
-  return { load, entries, at, position, metUrl, state: S };
+  return { load, entries, count, at, position, metUrl, state: S };
 })();

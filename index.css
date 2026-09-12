@@ -1,57 +1,50 @@
-/* index.css — the clay board.
+/* index.css — the sample card.
  *
- * The design is a Tailwind sketch; it is written out here as plain CSS at the
- * same values so the page carries no runtime CSS dependency. The clay ramp,
- * the two tile shadows and the board shadow are the whole visual system —
- * everything else is spacing. */
+ * The page is a manufacturer's glaze sample card, edge to edge: a sheet of
+ * card stock with a grid of glass tiles glued to it, the swatch name set large
+ * underneath and the maker's mark in the corner. Everything around it is the printed-ephemera
+ * language of the Ceramic Lookbook, which this is the companion piece to —
+ * the same paper, the same ink, the same stamp red, the same three faces —
+ * so the two read as a pair without being the same page twice.
+ *
+ * Hand-written at the design's values; no CSS framework. */
 
 :root {
-  --clay-50:  #f9f8f6;
-  --clay-100: #f1ede7;
-  --clay-200: #e1d9ce;
-  --clay-300: #cebeae;
-  --clay-400: #ba9e89;
-  --clay-500: #ac856a;
-  --clay-600: #a07159;
-  --clay-700: #865b49;
-  --clay-800: #6d4b3e;
-  --clay-900: #593e34;
+  /* ── the lookbook's stock ───────────────────────────────────────────── */
+  --paper:    #F3F1EC;   /* the desk */
+  --card:     #FAF8F3;   /* card stock */
+  --ink:      #262623;
+  --ink-2:    #33322E;
+  --ink-soft: #6E6C64;
+  --ink-mute: #928F86;
+  --hair:     #D8D4CB;   /* hairline rule */
+  --hair-2:   #E4E0D7;   /* a lighter rule, inside modules */
+  --key-edge: #BAB6AC;   /* the keycap's lower lip */
+  --stamp:    #C05A38;   /* stamp red: the playhead, the live dot, the play state */
 
-  --bisque: #e5e0d8;      /* an unglazed pad */
-  --board:  #f0ebe1;      /* the grout bed */
-  --iron:   #9c3d2e;      /* the playhead */
+  /* ── the tiles ──────────────────────────────────────────────────────── */
+  --blank:    #E9E5DC;   /* an unglazed tile, clear glass over bisque */
+  --blank-2:  #E2DDD3;   /* the alternate bar, a shade deeper */
+  --tile-r:   11%;       /* a glass tile's rounded corner, in proportion */
 
-  /* A pad is recessed into the grout until it is struck, then it sits proud. */
-  --tile-inactive: inset 2px 2px 4px rgba(0,0,0,0.1), inset -2px -2px 4px rgba(255,255,255,0.7);
-  --tile-active: 0 4px 6px -1px rgba(0,0,0,0.3), 0 2px 4px -1px rgba(0,0,0,0.2),
-                 inset 0 2px 4px rgba(255,255,255,0.5), inset 0 -2px 4px rgba(0,0,0,0.2);
-  --board-shadow: 20px 20px 60px #c5c1ba, -20px -20px 60px #ffffff;
+  --module-shadow: 0 12px 30px rgba(38, 38, 35, 0.14);
 
-  --label-w: 150px;
+  --label-w: 168px;
   --pad-gap: 0.5rem;
-  --row-gap: 0.6rem;
+  --row-gap: 0.5rem;
+  --edge: 2rem;          /* the card's margin, page edge to the print */
+  --chrome: 22rem;       /* header, playhead, foot and status stacked: what the tiles must leave */
 
-  --sans: 'Outfit', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --serif: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+  /* A tile is as big as the width allows, unless the height allows less: the
+   * sheet should fill the card without the card having to scroll. */
+  --pad: max(26px, min(
+    calc((100vw - 2 * var(--edge) - var(--label-w) - 1rem - 15 * var(--pad-gap)) / 16),
+    calc((100vh - var(--chrome)) / 9 - var(--row-gap))
+  ));
 
-  /* ── the mosaic wall ──────────────────────────────────────────────────
-   * A real tiled wall changes pattern between registers rather than running
-   * one grain everywhere: a field, a border course, a panel. Each surface
-   * here takes a different motif, and the scale is chosen for how much of
-   * that surface is actually visible — big motifs need open ground, so the
-   * star lattice goes on the page and the fine grains go in the narrow
-   * places. All of them sit at very low contrast; they are ground, not
-   * pattern you are meant to look at. */
-
-  /* the wall itself: an eight-point star lattice with diamond keys */
-  --tile-zellige: url("data:image/svg+xml,%3Csvg width='44' height='44' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23c9b9a7' stroke-opacity='.28' stroke-width='1'%3E%3Crect x='9' y='9' width='26' height='26'/%3E%3Crect x='9' y='9' width='26' height='26' transform='rotate(45 22 22)'/%3E%3C/g%3E%3Cg fill='%23c9b9a7' fill-opacity='.16'%3E%3Cpath d='M0 0l4 4-4 4-4-4z'/%3E%3Cpath d='M44 0l4 4-4 4-4-4z'/%3E%3Cpath d='M0 44l4 4-4 4-4-4z'/%3E%3Cpath d='M44 44l4 4-4 4-4-4z'/%3E%3C/g%3E%3C/svg%3E");
-
-  /* border courses, top and bottom: brick set in running bond */
-  --tile-bond: url("data:image/svg+xml,%3Csvg width='24' height='12' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23cebeae' fill-opacity='.22'%3E%3Crect x='.5' y='.5' width='10.8' height='4.8' rx='1'/%3E%3Crect x='12.5' y='.5' width='10.8' height='4.8' rx='1'/%3E%3Crect x='6.5' y='6.5' width='10.8' height='4.8' rx='1'/%3E%3Crect x='-5.5' y='6.5' width='10.8' height='4.8' rx='1'/%3E%3Crect x='18.5' y='6.5' width='10.8' height='4.8' rx='1'/%3E%3C/g%3E%3C/svg%3E");
-
-  /* the bed the pads are set into: four glazed tesserae per repeat */
-  --tile-tesserae: url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cg%3E%3Crect x='.6' y='.6' width='6.8' height='6.8' rx='1.2' fill='%23d9d1c3' fill-opacity='.55'/%3E%3Crect x='8.6' y='.6' width='6.8' height='6.8' rx='1.2' fill='%23cec6b6' fill-opacity='.42'/%3E%3Crect x='.6' y='8.6' width='6.8' height='6.8' rx='1.2' fill='%23d2cabb' fill-opacity='.34'/%3E%3Crect x='8.6' y='8.6' width='6.8' height='6.8' rx='1.2' fill='%23dcd4c7' fill-opacity='.5'/%3E%3C/g%3E%3C/svg%3E");
-
+  --mono:  'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --serif: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+  --display: 'Bodoni Moda', 'Didot', 'Bodoni 72', Georgia, serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -64,50 +57,92 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: var(--clay-100);
-  background-image: var(--tile-zellige);
-  font-family: var(--sans);
-  color: var(--clay-900);
+  background: var(--card);
+  font-family: var(--mono);
+  color: var(--ink);
   -webkit-font-smoothing: antialiased;
 }
 
-::selection { background: var(--clay-300); }
+/* The page is the card. A hairline just inside the viewport is its cut edge. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 10px;
+  border: 1px solid var(--hair-2);
+  pointer-events: none;
+  z-index: 1;
+}
+
+::selection { background: var(--stamp); color: var(--paper); }
+
+a { color: var(--ink); }
+a:hover { color: var(--stamp); }
 
 button { font: inherit; color: inherit; cursor: pointer; }
 
 .icon { width: 1.25rem; height: 1.25rem; display: block; flex: none; }
 .icon-xs { width: 0.5rem;  height: 0.5rem; }
-.icon-sm { width: 1rem;    height: 1rem; }
+.icon-sm { width: 0.875rem; height: 0.875rem; }
 .icon-md { width: 1.25rem; height: 1.25rem; }
 .icon-lg { width: 1.5rem;  height: 1.5rem; }
+
+/* The small printed label: the lookbook sets every caption in this voice. */
+.cap {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+/* ── the paper furniture ───────────────────────────────────────────────── */
+
+.module {
+  background: var(--card);
+  border: 1px solid var(--hair);
+  box-shadow: var(--module-shadow);
+}
+
+/* Keycaps. The lookbook uses them for anything the keyboard can reach; here
+ * they are the buttons, because a sequencer's controls are keys anyway. */
+.key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-width: 34px;
+  height: 30px;
+  padding: 0 12px;
+  background: var(--card);
+  border: 1px solid var(--key-edge);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  white-space: nowrap;
+  transition: background-color 0.12s, border-color 0.12s, transform 0.06s;
+}
+.key:hover { background: #fff; }
+.key:active { transform: translateY(1px); border-bottom-width: 1px; margin-bottom: 1px; }
+.key[aria-expanded="true"] { background: var(--paper); }
+.key--ink { border-color: var(--ink); }
+.key--ink:hover { background: var(--ink); color: var(--card); }
+.key:focus-visible { outline: 1.5px solid var(--stamp); outline-offset: 2px; }
 
 /* ── header ────────────────────────────────────────────────────────────── */
 
 .topbar {
   width: 100%;
-  padding: 1.5rem 2rem;
+  padding: 1.5rem var(--edge) 0.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  border-bottom: 1px solid var(--clay-200);
-  background-color: rgba(249, 248, 246, 0.82);
-  background-image: var(--tile-bond);
-  backdrop-filter: blur(4px);
+  position: relative;
   z-index: 20;
-}
-
-.brand { display: flex; align-items: center; }
-
-.brand h1 {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: 1.625rem;
-  line-height: 1.25;
-  letter-spacing: 0.025em;
-  font-weight: 400;
-  color: var(--clay-900);
-  white-space: nowrap;
 }
 
 /* ── transport ─────────────────────────────────────────────────────────── */
@@ -115,44 +150,44 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .transport {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  background-color: #fff;
-  padding: 0.5rem 1.5rem;
-  border-radius: 9999px;
-  border: 1px solid var(--clay-200);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  gap: 1.125rem;
+  padding: 0.5rem 1rem 0.5rem 0.5rem;
 }
 
 .t-play {
-  width: 3rem; height: 3rem;
-  display: flex; align-items: center; justify-content: center;
-  border: 0; border-radius: 9999px;
-  background: var(--clay-800); color: #fff;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
-  transition: background-color 0.15s, box-shadow 0.15s;
-}
-.t-play:hover { background: var(--clay-700); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1); }
-.t-play:focus-visible { outline: 2px solid var(--clay-500); outline-offset: 2px; }
-.t-play.playing { background: #991b1b; }
-.t-play.playing:hover { background: #7f1d1d; }
-
-.t-stop {
   width: 2.5rem; height: 2.5rem;
   display: flex; align-items: center; justify-content: center;
-  border: 0; border-radius: 9999px;
-  background: transparent; color: var(--clay-600);
-  transition: color 0.15s, background-color 0.15s;
+  border: 0; border-radius: 50%;
+  background: var(--ink); color: var(--card);
+  transition: background-color 0.15s;
 }
-.t-stop:hover { color: var(--clay-900); background: var(--clay-100); }
+.t-play:hover { background: var(--ink-2); }
+.t-play:focus-visible { outline: 1.5px solid var(--stamp); outline-offset: 2px; }
+.t-play.playing { background: var(--stamp); }
+.t-play.playing:hover { background: #a94b2c; }
 
-.t-rule { height: 2rem; width: 1px; background: var(--clay-200); }
+.t-stop {
+  width: 2rem; height: 2rem;
+  display: flex; align-items: center; justify-content: center;
+  border: 0; border-radius: 50%;
+  background: transparent; color: var(--ink-mute);
+  transition: color 0.15s;
+}
+.t-stop:hover { color: var(--ink); }
+
+.t-rule { height: 1.75rem; width: 1px; background: var(--hair-2); }
 
 .t-bpm { display: flex; align-items: center; gap: 0.75rem; }
-.t-bpm label { font-size: 0.875rem; font-weight: 500; color: var(--clay-600); width: 2.5rem; }
+.t-bpm label {
+  font-size: 8.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
 .t-bpm span {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--clay-900);
+  font-family: var(--serif);
+  font-size: 13px;
+  color: var(--ink);
   width: 2rem;
   text-align: right;
   font-variant-numeric: tabular-nums;
@@ -160,56 +195,35 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 #bpmSlider {
   -webkit-appearance: none; appearance: none;
-  width: 6rem; height: 4px;
-  background: var(--clay-200);
-  border-radius: 9999px;
+  width: 6rem; height: 1px;
+  background: var(--key-edge);
   cursor: pointer;
 }
 #bpmSlider::-webkit-slider-thumb {
   -webkit-appearance: none; appearance: none;
-  width: 14px; height: 14px; border-radius: 9999px;
-  background: var(--clay-800); border: 2px solid #fff;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  width: 10px; height: 16px; border-radius: 2px;
+  background: var(--card); border: 1px solid var(--ink);
+  box-shadow: 0 1px 0 var(--ink);
 }
 #bpmSlider::-moz-range-thumb {
-  width: 14px; height: 14px; border-radius: 9999px;
-  background: var(--clay-800); border: 2px solid #fff;
+  width: 10px; height: 16px; border-radius: 2px;
+  background: var(--card); border: 1px solid var(--ink);
 }
 
 .t-clear {
-  display: flex; align-items: center; gap: 0.25rem;
-  border: 0; background: transparent;
-  font-size: 0.875rem; font-weight: 500;
-  color: var(--clay-500);
+  display: flex; align-items: center; gap: 0.35rem;
+  border: 0; background: transparent; padding: 0;
+  font-size: 8.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
   transition: color 0.15s;
 }
-.t-clear:hover { color: #b91c1c; }
+.t-clear:hover { color: var(--stamp); }
 
 /* ── header actions ────────────────────────────────────────────────────── */
 
-.actions { display: flex; align-items: center; gap: 0.75rem; }
-
-.btn-ghost, .btn-solid {
-  display: inline-flex; align-items: center; gap: 0.375rem;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  font-size: 0.875rem; font-weight: 500;
-  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
-}
-.btn-ghost {
-  border: 1px solid var(--clay-300);
-  background-color: #fff;
-  color: var(--clay-700);
-}
-.btn-ghost:hover { background-color: var(--clay-100); }
-.btn-ghost[aria-expanded="true"] { background-color: var(--clay-200); }
-.btn-solid {
-  border: 0;
-  background: var(--clay-900);
-  color: #fff;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
-}
-.btn-solid:hover { background: #000; }
+.actions { display: flex; align-items: center; gap: 0.625rem; }
 
 .menu-wrap { position: relative; }
 
@@ -219,153 +233,163 @@ button { font: inherit; color: inherit; cursor: pointer; }
   right: 0;
   z-index: 40;
   min-width: 17.5rem;
-  padding: 0.375rem;
-  background: #fff;
-  border: 1px solid var(--clay-200);
-  border-radius: 0.75rem;
-  box-shadow: 0 10px 30px -8px rgba(89,62,52,0.28);
+  padding: 0.25rem 0;
+  background: var(--card);
+  border: 1px solid var(--hair);
+  box-shadow: var(--module-shadow);
 }
 .menu button {
   display: block; width: 100%;
   text-align: left;
-  padding: 0.5rem 0.625rem;
-  border: 0; background: transparent;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  color: var(--clay-800);
+  padding: 0.5rem 0.875rem;
+  border: 0; border-top: 1px solid var(--hair-2);
+  background: transparent;
+  font-family: var(--serif);
+  font-size: 12px;
+  color: var(--ink);
 }
-.menu button:hover { background: var(--clay-100); }
+.menu button:first-child { border-top: 0; }
+.menu button:hover { background: var(--paper); }
 .menu button small {
   display: block;
-  font-size: 0.6875rem;
-  color: var(--clay-500);
-  letter-spacing: 0.04em;
-  margin-top: 1px;
+  margin-top: 3px;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
 }
 
-/* ── board ─────────────────────────────────────────────────────────────── */
+/* ── the card ──────────────────────────────────────────────────────────── */
 
 main {
   flex: 1;
-  display: flex; align-items: center; justify-content: center;
-  padding: 2rem;
+  display: flex;
+  padding: 0.75rem var(--edge) 1.25rem;
   position: relative;
-  overflow: auto;
 }
 
-.glow { position: absolute; border-radius: 9999px; filter: blur(64px); z-index: -10; pointer-events: none; }
-.glow-a { top: 5rem; left: 5rem; width: 16rem; height: 16rem; background: rgba(255,255,255,0.4); }
-.glow-b { bottom: 5rem; right: 5rem; width: 24rem; height: 24rem; background: rgba(206,190,174,0.2); }
-
-.board {
+.card {
   position: relative;
   width: 100%;
-  max-width: 72rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.25rem;
+}
+
+/* the sheet of tiles, centred on the card when the height is what limits it */
+.field {
+  width: fit-content;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 2rem;
-  background-color: var(--board);
-  background-image: var(--tile-tesserae);
-  border: 4px solid #fff;
-  border-radius: 1.5rem;
-  box-shadow: var(--board-shadow);
 }
 
 .playhead-track {
   display: grid;
-  grid-template-columns: repeat(16, minmax(0, 1fr));
+  grid-template-columns: repeat(16, var(--pad));
   gap: var(--pad-gap);
   padding-left: calc(var(--label-w) + 1rem);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.625rem;
+  justify-items: center;
 }
 
+/* The lookbook's radio dot, hairline and hollow until it is the one. */
 .playhead-dot {
-  height: 6px;
-  border-radius: 3px;
-  background: #d1c7ba;
-  transition: background-color 0.1s, box-shadow 0.1s;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  border: 1px solid var(--hair);
+  background: transparent;
+  transition: background-color 0.1s, border-color 0.1s, transform 0.1s;
 }
-.playhead-dot.beat { background: #c2b4a3; }
-.playhead-dot.active { background: var(--iron); box-shadow: 0 0 8px var(--iron); }
+.playhead-dot.beat { border-color: var(--key-edge); background: var(--hair-2); }
+.playhead-dot.active { background: var(--stamp); border-color: var(--stamp); transform: scale(1.25); }
 
 .grid { display: flex; flex-direction: column; gap: var(--row-gap); }
 
 .row { display: flex; align-items: center; gap: 1rem; }
 
-/* ── the material label, straight off the catalogue list ───────────────── */
+/* ── the material label, straight off the lookbook's catalogue panel ───── */
 
 .label {
   width: var(--label-w);
   flex: none;
-  display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  background-color: #fff;
-  border: 1px solid var(--clay-200);
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  display: flex; align-items: center; gap: 0.625rem;
+  padding: 0 0.25rem 0 0.125rem;
+  border-bottom: 1px solid var(--hair-2);
+  height: 100%;
+  min-height: 1.75rem;
 }
 
 .label-name {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--clay-800);
+  flex: 1;
+  font-family: var(--serif);
+  font-size: 12px;
+  color: var(--ink);
   white-space: nowrap;
+  text-transform: capitalize;
 }
 
-/* The catalogue's radio circle, given a job: it mutes the row. */
+.label-count {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: 0.08em;
+  color: var(--ink-mute);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The catalogue's dot, given a job: it mutes the row. Filled with the
+ * material's own glaze colour while the row sounds; hollow when it is off. */
 .label-mute {
-  width: 1rem; height: 1rem; flex: none;
-  padding: 0; border-radius: 9999px;
-  border: 1px solid var(--clay-300);
-  background: var(--clay-100);
-  display: flex; align-items: center; justify-content: center;
-  transition: background-color 0.15s, border-color 0.15s;
-}
-.label-mute::after {
-  content: '';
-  width: 6px; height: 6px; border-radius: 9999px;
+  width: 8px; height: 8px; flex: none;
+  padding: 0; border-radius: 50%;
+  border: 1px solid var(--accent);
   background: var(--accent);
-  transition: transform 0.15s, opacity 0.15s;
+  transition: background-color 0.15s, border-color 0.15s, transform 0.15s;
 }
-.label-mute:hover { border-color: var(--accent); }
-.row.muted .label-mute::after { transform: scale(0.1); opacity: 0; }
-.row.muted .label { opacity: 0.55; }
-.row.muted .pads { opacity: 0.4; filter: saturate(0.2); }
+.label-mute:hover { transform: scale(1.3); }
+.row.muted .label-mute { background: transparent; border-color: var(--hair); }
+.row.muted .label-name, .row.muted .label-count { color: var(--ink-mute); }
+.row.muted .pads { opacity: 0.45; filter: saturate(0.15); }
 
-/* ── the pads ──────────────────────────────────────────────────────────── */
+/* ── the tiles ─────────────────────────────────────────────────────────── */
 
 .pads {
-  flex: 1;
+  flex: none;
   display: grid;
-  grid-template-columns: repeat(16, minmax(0, 1fr));
+  grid-template-columns: repeat(16, var(--pad));
   gap: var(--pad-gap);
   /* a drag across the pads paints them; it must not scroll the page instead */
   touch-action: none;
   transition: opacity 0.2s, filter 0.2s;
 }
 
+/* A glass tile. The glaze colour is the object's crop; the glass on top is
+ * drawn once as an overlay: a hairline of darker rim, a raked band of light
+ * down the top and left edges where the bevel catches the room, and a shade
+ * gathering in the bottom-right corner. An unstruck tile is the same glass
+ * over blank bisque, so the card reads as a full sheet of samples with most
+ * of them still unglazed. */
 .pad {
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
   padding: 0;
-  border: 1px solid rgba(206,190,174,0.5);
-  border-radius: 0.25rem;
-  background-color: var(--bisque);
-  box-shadow: var(--tile-inactive);
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 0;
+  border-radius: var(--tile-r);
+  background-color: var(--blank);
+  box-shadow: 0 1px 1px rgba(38,38,35,0.10);
+  transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.12s, background-color 0.12s;
 }
-/* The playhead ring sits 4px outside the pad, in the grout, so the pad cannot
- * clip its own overflow — the crop is clipped by the face instead — and the
- * lit column has to rise above the pads drawn after it. */
-.pad.playing-col { z-index: 5; }
 /* every other group of four, so the 4/4 bar is readable at a glance */
-.pad.offbeat { background-color: rgba(225,217,206,0.5); }
+.pad.offbeat { background-color: var(--blank-2); }
+.pad:hover { background-color: #DBD5CA; }
 
-/* The crop. An unstruck pad is empty bisque — the object only appears when the
- * tile is struck, so the board reads as a clay field you are setting objects
- * into rather than a wall of photographs. */
+/* The playhead ring sits outside the pad, on the card, so the pad cannot clip
+ * its own overflow — the crop is clipped by the face instead — and the lit
+ * column has to rise above the pads drawn after it. */
+.pad.playing-col { z-index: 5; }
+
 .pad-face {
   position: absolute; inset: 0;
   border-radius: inherit;
@@ -377,13 +401,9 @@ main {
   opacity: 0;
   transition: opacity 0.15s;
 }
-.pad:hover { background-color: #dcd6cc; }
-
-.pad.on { box-shadow: var(--tile-active); border-color: rgba(0,0,0,0.12); }
 .pad.on .pad-face { opacity: 1; }
 
-/* The glaze: a raking highlight across the struck tile, plus the material's
- * own surface pattern laid over the object at a whisper. */
+/* the material's own surface, laid over the object at a whisper */
 .pad.on .pad-face::before {
   content: '';
   position: absolute; inset: 0;
@@ -391,49 +411,173 @@ main {
   background-size: var(--pattern-size);
   background-position: center;
   mix-blend-mode: overlay;
-  opacity: 0.55;
+  opacity: 0.4;
 }
-.pad.on .pad-face::after {
+
+/* the glass */
+.pad::after {
   content: '';
   position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 40%,
-                                      rgba(0,0,0,0) 60%, rgba(0,0,0,0.18) 100%);
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    /* the corner, where both bevels meet the light */
+    radial-gradient(circle at 12% 12%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 30%),
+    /* the two bands: a soft outer fade, a crisp inner edge */
+    linear-gradient(180deg, rgba(255,255,255,0.40) 0%, rgba(255,255,255,0.36) 17%, rgba(255,255,255,0.14) 22%, rgba(255,255,255,0) 24%),
+    linear-gradient(90deg,  rgba(255,255,255,0.40) 0%, rgba(255,255,255,0.36) 17%, rgba(255,255,255,0.14) 22%, rgba(255,255,255,0) 24%),
+    /* the shade gathering opposite */
+    linear-gradient(135deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.06) 75%, rgba(0,0,0,0.16) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,0.18),
+    inset 0 0 0 2px rgba(255,255,255,0.12),
+    inset 0 -1px 0 1px rgba(0,0,0,0.06),
+    inset 0 0 8px rgba(0,0,0,0.10);
+  opacity: 0.55;
+  transition: opacity 0.15s;
 }
-.pad.struck { transform: scale(1.06); }
+.pad.on::after { opacity: 1; }
+.pad.on {
+  box-shadow: 0 2px 3px rgba(38,38,35,0.28), 0 6px 12px -4px rgba(38,38,35,0.22);
+}
+.pad.struck { transform: scale(1.07); }
 
-/* the column under the playhead */
-/* A white ring alone is what the design asks for, but white on a bisque board
- * is nearly invisible — the playhead has to be findable at a glance while the
- * thing is running. So the ring keeps its white edge and gains a hairline and
- * a wash in the same iron the playhead dots use, which ties the two together. */
+/* the column under the playhead: a stamp-red hairline drawn on the card
+ * around the tile, the way the lookbook marks the one that is on */
 .step-highlight {
   position: absolute;
-  inset: -4px;
-  border: 2px solid rgba(255,255,255,0.9);
-  border-radius: 6px;
-  background: rgba(156,61,46,0.07);
+  inset: -3px;
+  border: 1.5px solid var(--stamp);
+  border-radius: calc(var(--tile-r) + 3px);
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.05s;
-  box-shadow: 0 0 10px rgba(255,255,255,0.55), 0 0 0 1px rgba(156,61,46,0.5);
   z-index: 10;
 }
 .pad.playing-col .step-highlight { opacity: 1; }
+
+/* ── the card's printed foot ───────────────────────────────────────────── */
+
+.card-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+  padding: 0 0.25rem;
+}
+
+.swatch-name {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  text-transform: lowercase;
+  /* the name is written onto the card: click it and type */
+  display: inline-block;
+  min-width: 6ch;
+  padding: 0 0 2px;
+  border-bottom: 1px dashed transparent;
+  outline: 0;
+  cursor: text;
+  caret-color: var(--stamp);
+  transition: border-color 0.15s;
+}
+.swatch-name:hover { border-color: var(--key-edge); }
+.swatch-name:focus { border-color: var(--stamp); }
+
+.card-note {
+  margin: 0.875rem 0 0;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  color: var(--ink-2);
+}
+.card-note b {
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--stamp);
+}
+.card-note em {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 10.5px;
+  letter-spacing: 0;
+  color: var(--ink-soft);
+}
+
+.card-contact {
+  margin: 0.875rem 0 0;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.8;
+  color: var(--ink-mute);
+}
+.card-contact a { text-decoration: none; border-bottom: 1px solid var(--hair); }
+.card-contact a:hover { border-color: var(--stamp); }
+
+/* the maker's mark */
+.mark {
+  text-align: right;
+  flex: none;
+}
+.mark-name {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.625rem;
+  line-height: 1;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.mark-name i { font-style: italic; }
+.mark-sub {
+  margin: 0.5rem 0 0;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.8;
+  color: var(--ink-mute);
+}
 
 /* ── footer ────────────────────────────────────────────────────────────── */
 
 .statusbar {
   width: 100%;
-  padding: 1rem 2rem;
-  border-top: 1px solid var(--clay-200);
-  display: flex; justify-content: space-between; align-items: center;
-  font-size: 0.75rem; font-weight: 500;
-  color: var(--clay-500);
-  background-color: rgba(249,248,246,0.6);
-  background-image: var(--tile-bond);
+  padding: 0 var(--edge) 1.5rem;
+  position: relative;
+  display: flex; justify-content: space-between; align-items: flex-end;
   z-index: 20;
 }
-.status-left { display: flex; align-items: center; gap: 1rem; }
+
+/* The status reads off a receipt stub, set slightly off-square the way a slip
+ * of paper lies on a desk. */
+.status-left {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.5rem 0.875rem;
+  background: var(--card);
+  border: 1px solid var(--hair);
+  border-top: 1px dashed var(--key-edge);
+  box-shadow: 0 8px 22px rgba(38,38,35,0.10);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  transform: rotate(-0.6deg);
+  transform-origin: left bottom;
+}
+.status-item { display: flex; align-items: center; gap: 0.375rem; }
+.status-sep { color: var(--hair); }
+#engineDot { color: var(--hair); transition: color 0.3s; }
+#engineDot.ready { color: var(--stamp); }
 
 /* ── about ─────────────────────────────────────────────────────────────── */
 
@@ -442,17 +586,16 @@ main {
 .about-cta {
   border: 0;
   background: transparent;
-  padding: 0;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--clay-600);
-  border-bottom: 1px solid var(--clay-300);
-  padding-bottom: 2px;
+  padding: 0 0 2px;
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--hair);
   transition: color 0.15s, border-color 0.15s;
 }
 .about-cta:hover,
-.about-cta[aria-expanded="true"] { color: var(--clay-900); border-color: var(--clay-600); }
+.about-cta[aria-expanded="true"] { color: var(--stamp); border-color: var(--stamp); }
 
 .about-panel {
   position: absolute;
@@ -461,80 +604,81 @@ main {
   z-index: 50;
   width: 26rem;
   max-width: calc(100vw - 4rem);
-  padding: 1.25rem 1.375rem;
-  background: #fff;
-  border: 1px solid var(--clay-200);
-  border-radius: 0.75rem;
-  box-shadow: 0 16px 40px -12px rgba(89,62,52,0.35);
-  animation: about-in 0.16s ease-out;
+  padding: 1.375rem 1.5rem 1.25rem;
+  background: var(--card);
+  border: 1px solid var(--hair);
+  box-shadow: 0 16px 44px rgba(38,38,35,0.16);
+  animation: about-in 0.18s ease-out;
 }
 @keyframes about-in {
-  from { opacity: 0; transform: translateY(4px); }
+  from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 .about-panel h2 {
-  margin: 0 0 0.5rem;
-  font-family: var(--serif);
+  margin: 0 0 0.75rem;
+  font-family: var(--display);
   font-weight: 400;
-  font-size: 1.25rem;
-  letter-spacing: 0.02em;
-  color: var(--clay-900);
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--ink);
 }
 .about-panel p {
   margin: 0 0 0.625rem;
-  font-size: 0.8125rem;
-  font-weight: 400;
-  line-height: 1.55;
-  color: var(--clay-700);
+  font-family: var(--serif);
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
 }
 .about-panel p:last-child { margin-bottom: 0; }
 .about-hint {
-  padding-top: 0.625rem;
-  border-top: 1px solid var(--clay-200);
-  font-size: 0.6875rem !important;
-  color: var(--clay-500) !important;
+  margin-top: 0.875rem !important;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--key-edge);
+  font-family: var(--mono) !important;
+  font-size: 8px !important;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute) !important;
 }
-.status-item { display: flex; align-items: center; gap: 0.375rem; }
-.status-sep { color: var(--clay-300); }
-#engineDot { color: #d1c7ba; transition: color 0.3s; }
-#engineDot.ready { color: #22c55e; }
 
 /* ── overlays ──────────────────────────────────────────────────────────── */
 
+/* The catalogue card, the lookbook's detail voice at tooltip size. */
 .tooltip {
   position: fixed;
   z-index: 60;
   max-width: 18rem;
-  padding: 0.5rem 0.75rem;
-  background: #fff;
-  border: 1px solid var(--clay-200);
-  border-radius: 0.5rem;
-  box-shadow: 0 10px 30px -8px rgba(89,62,52,0.35);
+  padding: 0.625rem 0.875rem 0.5rem;
+  background: var(--card);
+  border: 1px solid var(--hair);
+  box-shadow: var(--module-shadow);
   pointer-events: none;
 }
 .tooltip b {
   display: block;
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 0.9375rem;
-  line-height: 1.25;
-  color: var(--clay-900);
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ink);
 }
 .tooltip span {
   display: block;
-  margin-top: 2px;
-  font-size: 0.6875rem;
-  letter-spacing: 0.04em;
-  color: var(--clay-500);
+  margin-top: 3px;
+  font-family: var(--serif);
+  font-size: 10.5px;
+  color: var(--ink-soft);
 }
 .tooltip em {
   display: block;
-  margin-top: 0.375rem;
+  margin-top: 0.5rem;
+  padding-top: 0.375rem;
+  border-top: 1px solid var(--hair-2);
   font-style: normal;
-  font-size: 0.625rem;
+  font-size: 7.5px;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--clay-400);
+  letter-spacing: 0.14em;
+  color: var(--ink-mute);
 }
 
 .toast {
@@ -544,11 +688,12 @@ main {
   transform: translateX(-50%);
   z-index: 60;
   padding: 0.625rem 1.125rem;
-  border-radius: 9999px;
-  background: var(--clay-900);
-  color: var(--clay-50);
-  font-size: 0.8125rem;
-  box-shadow: 0 10px 30px -8px rgba(89,62,52,0.5);
+  background: var(--ink);
+  color: var(--card);
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 30px -8px rgba(38,38,35,0.5);
   animation: toast-in 0.2s ease-out;
 }
 @keyframes toast-in {
@@ -556,11 +701,20 @@ main {
   to   { opacity: 1; transform: translate(-50%, 0); }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .about-panel, .toast { animation: none; }
+  .pad, .pad::after, .pad-face { transition: none; }
+}
+
 @media (max-width: 1180px) {
+  :root { --chrome: 26rem; }
   .topbar { flex-wrap: wrap; }
   .transport { order: 3; width: 100%; justify-content: center; }
 }
 @media (max-width: 820px) {
-  :root { --label-w: 118px; --pad-gap: 0.3rem; }
-  .board { padding: 1.25rem; }
+  :root { --label-w: 96px; --pad-gap: 0.3rem; --row-gap: 0.3rem; --edge: 1rem; --chrome: 30rem; }
+  .label-count { display: none; }
+  .card-foot { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+  .mark { text-align: left; }
+  .swatch-name { font-size: 1.625rem; }
 }
