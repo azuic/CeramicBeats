@@ -76,6 +76,9 @@ const View = (() => {
         pad.className = 'pad' + (Math.floor(s / 4) % 2 ? ' offbeat' : '');
         pad.dataset.t = t;
         pad.dataset.s = s;
+        // Each sample is laid down at its own slight angle. The angle is
+        // fixed by the slot, so the sheet looks the same on every visit.
+        pad.style.setProperty('--tilt', (((t * 5 + s * 7) % 9) - 4) * 0.7 + 'deg');
         pad.innerHTML = '<span class="pad-face"></span><span class="step-highlight"></span>';
         pads.appendChild(pad);
         S.pads[t][s] = pad;

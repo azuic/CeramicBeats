@@ -6,8 +6,8 @@
 <title>Ceramic Beats — a sequencer of Met ceramics</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./index.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=IBM+Plex+Mono:wght@400;500&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./index.css?v=5">
 <script src="Tone.js"></script>
 </head>
 <body>
@@ -23,10 +23,12 @@
   <symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v11M7.5 10.5L12 15l4.5-4.5M4.5 19.5h15"/></symbol>
   <symbol id="i-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 9.5l5.5 5.5 5.5-5.5"/></symbol>
   <symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="currentColor"/></symbol>
+  <!-- an arrow drawn by hand, for the notes in the margin -->
+  <symbol id="i-arrow-hand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13.5c4.5-2.4 9.6-2.9 17.2-1.6M15.4 7.2c1.6 2.3 3.3 3.6 4.9 4.6-2.2.7-4 2.2-5.6 4.4"/></symbol>
 </svg>
 
 <header class="topbar">
-  <div class="transport module">
+  <div class="transport">
     <button id="playBtn" class="t-play" aria-label="Play" title="Play / pause — space">
       <svg class="icon icon-md"><use href="#i-play" id="playIcon"/></svg>
     </button>
@@ -66,31 +68,31 @@
 </header>
 
 <main>
-  <!-- The sample card. The tiles are glued to a sheet of the whitest stock,
-       and the card is printed underneath the way a glaze manufacturer's
-       swatch card is: the sample's name, the small print, the maker's mark. -->
+  <!-- The sample sheet. Slots for samples are pencilled onto a sheet of warm
+       grey stock; a struck tile is a sample cut out and laid in its slot. The
+       beat's name is written at the top by hand, and the studio's caption is
+       typed underneath the way a caption goes under a photograph. -->
   <div class="card">
+    <div class="sheet-head">
+      <h1 class="swatch-name" id="swatchName" contenteditable="plaintext-only" spellcheck="false" title="Click to name this beat" aria-label="Beat name">untitled</h1>
+      <span class="sheet-note" aria-hidden="true">tap a slot to lay a sample <svg class="hand-arrow"><use href="#i-arrow-hand"/></svg></span>
+    </div>
+
     <div class="field">
       <div class="playhead-track" id="playheadTrack"></div>
       <div class="grid" id="sequencerGrid"></div>
     </div>
 
     <div class="card-foot">
-      <div>
-        <h1 class="swatch-name" id="swatchName" contenteditable="plaintext-only" spellcheck="false" title="Click to name this beat" aria-label="Beat name">untitled</h1>
-        <p class="card-note">
-          <b>Ceramic Beats</b> samples show true sound only.
-          <em>Natural variations may occur between reshuffles.</em>
-        </p>
-        <p class="card-contact">
-          9 materials · 144 tiles · 44,354 objects<br>
-          <a href="https://www.metmuseum.org/art/collection" target="_blank" rel="noopener">metmuseum.org/art/collection</a>
-        </p>
-      </div>
-      <div class="mark">
-        <p class="mark-name">Ceramic <i>Beats</i> Co.</p>
-        <p class="mark-sub">Open access<br>The Metropolitan Museum of Art</p>
-      </div>
+      <p class="caption">- Ceramic_Beats -</p>
+      <p class="card-note">
+        <b>Ceramic Beats</b> samples show true sound only.
+        <em>natural variations may occur between reshuffles</em>
+      </p>
+      <p class="card-contact">
+        9 materials · 144 tiles · 44,354 objects · open access, The Metropolitan Museum of Art<br>
+        <a href="https://www.metmuseum.org/art/collection" target="_blank" rel="noopener">metmuseum.org/art/collection</a>
+      </p>
     </div>
   </div>
 </main>
@@ -108,7 +110,7 @@
       About this project
     </button>
     <div id="aboutPanel" class="about-panel" hidden>
-      <h2>Ceramic Beats Co.</h2>
+      <h2>Ceramic Beats</h2>
       <p>
         A step sequencer built out of The Met’s open collection. Each of the nine
         tracks is a material the museum’s own catalogue names, and every tile you
@@ -133,7 +135,7 @@
 <script src="js/tiles.js?v=2"></script>
 <script src="js/audio.js"></script>
 <script src="js/pattern.js"></script>
-<script src="js/ui.js?v=3"></script>
+<script src="js/ui.js?v=4"></script>
 <script src="js/app.js?v=3"></script>
 </body>
 </html>

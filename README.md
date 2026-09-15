@@ -135,25 +135,31 @@ is the gap between the two:
 
 ## A note on the layout
 
-The page is a glaze manufacturer's sample card, edge to edge: card stock with a
-grid of glass tiles glued to it, the sample's name set large underneath, the
-small print, and the maker's mark in the corner. Each tile is drawn as glass
-over the object's crop — a hairline rim, a raked band of light down the top and
-left edges where the bevel catches the room, and a shade gathering in the
-opposite corner. An unstruck tile is the same glass over blank bisque, so the
-card reads as a full sheet of samples with most of them still unglazed. A tile
-is as large as the width allows unless the height allows less, so the sheet
-fills the card without the card having to scroll.
+The page is a sample sheet: a sheet of warm grey stock with a grid of slots
+pencilled onto it, freehand, for samples to go in. A struck tile is a sample cut
+out of the object's photograph and laid in its slot — it keeps a white cut edge,
+casts a shadow towards the lower right, and sits a degree or two off square at
+an angle fixed by the slot, so the sheet looks the same on every visit. An
+unstruck slot is just the pencil outline, with every other bar lightly hatched
+in so the 4/4 is countable. The tooth of the paper is an SVG noise overlay laid
+over everything. A slot is as large as the width allows unless the height
+allows less, so the grid fills the sheet without the sheet having to scroll.
 
-Everything around the card borrows the printed-ephemera language of
+Everything written on the sheet is written by hand in Caveat, in graphite: the
+beat's name, looped round at the top; the material beside each row, struck
+through in pencil when the row is muted; the beat count along the top; the
+notes in the margin. What is not handwritten is the studio's caption typed under
+the sheet in IBM Plex Mono, and the catalogue values in Libre Baskerville. The
+controls are boxes drawn round a word in pencil, the play button is a black
+ball that goes red while it plays, and the status is typed on a slip of lighter
+paper taped to the corner. The lines under the labels, the loop round the name
+and the crayon stroke under the caption are single SVG paths, roughened with a
+displacement filter so they read as drawn rather than plotted.
+
+It is the companion piece to
 [the-met-ceramics-lookbook](https://github.com/azuic/the-met-ceramics-lookbook),
-which this is the companion piece to: the same paper and card stock, the same
-ink and stamp red, and the same three faces (Bodoni Moda for the name and the
-mark, Libre Baskerville for the catalogue values, IBM Plex Mono for the small
-print). The row labels are lines off the lookbook's catalogue panel, dot and
-count included; the controls are its keycaps; the status reads off a receipt
-stub set slightly off-square. The two are meant to sit side by side as a pair,
-not as the same page twice.
+and keeps its stamp red and its two printed faces; the pencil is what this
+page adds.
 
 ---
 
