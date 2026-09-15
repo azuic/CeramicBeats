@@ -12,8 +12,8 @@
 
 :root {
   /* ── the stock ──────────────────────────────────────────────────────── */
-  --paper:    #D9D5C7;   /* the sheet itself, a warm grey card */
-  --card:     #EEEADF;   /* a lighter slip of paper laid on it: notes, menus */
+  --paper:    #E4E2DB;   /* the sheet itself, a pale warm grey */
+  --card:     #F4F2EC;   /* a lighter slip of paper laid on it: notes, menus */
   --ink:      #2B2A26;
   --ink-2:    #3A3934;
   --ink-soft: #65635B;
