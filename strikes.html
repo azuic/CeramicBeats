@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nine Bodies, Nine Strikes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=IBM+Plex+Mono:wght@400;500&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  /* The sheet: the same stock, ink, pencil and red as the board itself. The
+   * page commits to the one paper world the site lives in, so every colour is
+   * painted explicitly rather than borrowed from the viewer's theme. */
+  :root {
+    --paper:   #E4E2DB;
+    --card:    #F4F2EC;
+    --ink:     #2B2A26;
+    --ink-2:   #3A3934;
+    --ink-soft:#65635B;
+    --ink-mute:#8A877D;
+    --pencil:  #55534C;
+    --hair:    #B9B5A8;
+    --stamp:   #C9583A;
+    --crayon:  #B79A46;
+    --slot-line: rgba(60, 58, 52, 0.30);
+    --slot-fill: rgba(60, 58, 52, 0.065);
+    --slip-shadow: 2px 4px 12px rgba(38, 38, 35, 0.16), 0 1px 2px rgba(38, 38, 35, 0.12);
+
+    --mono:  'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --serif: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+    --hand:  'Caveat', 'Bradley Hand', 'Segoe Print', cursive;
+
+    --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.22  0 0 0 0 0.21  0 0 0 0 0.18  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>");
+    --pencil-rule: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 6' preserveAspectRatio='none'><path d='M1 3.4 C 30 2.1, 60 4.7, 100 3.1 S 170 2.3, 199 3.7' fill='none' stroke='%2355534C' stroke-width='1.1' stroke-linecap='round' vector-effect='non-scaling-stroke' opacity='0.6'/></svg>");
+    --pencil-loop: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><filter id='w' x='-10%25' y='-20%25' width='120%25' height='140%25'><feTurbulence type='fractalNoise' baseFrequency='0.045' numOctaves='2' seed='7'/><feDisplacementMap in='SourceGraphic' scale='2.2'/></filter><path filter='url(%23w)' d='M15 8 C 40 1, 91 2, 95 17 C 98 31, 66 39, 34 37 C 6 35, 1 22, 9 13 C 15 7, 42 6, 62 7' fill='none' stroke='%2355534C' stroke-width='1.3' stroke-linecap='round' vector-effect='non-scaling-stroke'/></svg>");
+    --stamp-rule: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 6' preserveAspectRatio='none'><path d='M1 3.6 C 30 2.3, 60 4.5, 100 3.0 S 170 2.6, 199 3.5' fill='none' stroke='%23C9583A' stroke-width='1.3' stroke-linecap='round' vector-effect='non-scaling-stroke' opacity='0.9'/></svg>");
+    --crayon-rule: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 8' preserveAspectRatio='none'><path d='M2 4.5 C 40 2.5, 80 6.5, 120 4 S 170 3, 198 4.5' fill='none' stroke='%23B79A46' stroke-width='2.4' stroke-linecap='round' vector-effect='non-scaling-stroke' opacity='0.8'/></svg>");
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--mono);
+    -webkit-font-smoothing: antialiased;
+    padding-block: 2.5rem 4rem;
+    padding-inline: clamp(16px, 4vw, 3rem);
+    position: relative;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(120% 90% at 18% 10%, rgba(255,255,255,0.22), rgba(255,255,255,0) 55%),
+      radial-gradient(90% 80% at 95% 100%, rgba(38,38,35,0.10), rgba(38,38,35,0) 60%);
+    pointer-events: none; z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: var(--grain);
+    opacity: 0.42;
+    mix-blend-mode: multiply;
+    pointer-events: none; z-index: 100;
+  }
+
+  .sheet { position: relative; z-index: 1; max-width: 66rem; margin: 0 auto; }
+
+  a { color: var(--ink); }
+  a:hover { color: var(--stamp); }
+
+  /* ── written by hand ────────────────────────────────────────────────── */
+  .hand { font-family: var(--hand); font-weight: 400; color: var(--pencil); }
+  .cap {
+    font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-mute);
+  }
+
+  .sheet-head {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 1rem 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .sheet-title {
+    margin: 0;
+    font-family: var(--hand); font-weight: 500;
+    font-size: clamp(2rem, 4.5vw, 2.75rem); line-height: 1;
+    color: var(--pencil);
+    display: inline-block;
+    padding: 0.3em 0.75em 0.32em 0.6em;
+    background: var(--pencil-loop) center / 100% 100% no-repeat;
+    transform: rotate(-1.6deg); transform-origin: left bottom;
+    text-wrap: balance;
+  }
+  .sheet-note {
+    font-family: var(--hand); font-size: 17px; line-height: 1.2; color: var(--pencil);
+    max-width: 34rem; opacity: 0.85; transform: rotate(0.6deg);
+  }
+
+  /* ── the kiln axis ──────────────────────────────────────────────────── */
+  figure { margin: 0; }
+  figcaption {
+    margin-top: 0.5rem;
+    font-family: var(--serif); font-size: 11.5px; line-height: 1.6; color: var(--ink-2);
+    max-width: 62ch;
+  }
+  .axis { margin: 0.5rem 0 2.25rem; overflow-x: auto; }
+  .axis svg { display: block; width: 100%; min-width: 640px; height: auto; }
+  svg .hand-t { font-family: var(--hand); font-size: 17px; fill: var(--pencil); }
+  svg .cap-t  { font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.16em; fill: var(--ink-mute); text-transform: uppercase; }
+  svg .serif-t { font-family: var(--serif); font-size: 11px; fill: var(--ink-2); }
+
+  /* ── how to read a prompt ───────────────────────────────────────────── */
+  .key {
+    display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; align-items: baseline;
+    padding: 0.875rem 1rem 0.75rem;
+    background: var(--card); box-shadow: var(--slip-shadow);
+    transform: rotate(-0.4deg); transform-origin: left top;
+    width: fit-content; max-width: 100%;
+    margin-bottom: 2.25rem;
+    position: relative;
+  }
+  .key::before {
+    content: ''; position: absolute; top: -7px; left: 22px; width: 44px; height: 15px;
+    background: rgba(236, 226, 176, 0.55);
+    border-left: 1px dashed rgba(255,255,255,0.5); border-right: 1px dashed rgba(255,255,255,0.5);
+    transform: rotate(-4deg);
+  }
+  .key .lead { font-family: var(--hand); font-size: 18px; color: var(--pencil); margin-right: 0.25rem; }
+  .key span.k { font-family: var(--serif); font-size: 11.5px; color: var(--ink-2); }
+
+  /* the four parts of a prompt, marked the way the sheet marks things */
+  .o { background: var(--stamp-rule) bottom left / 100% 5px no-repeat; padding-bottom: 2px; }
+  .w { background: var(--crayon-rule) bottom left / 100% 6px no-repeat; padding-bottom: 2px; }
+  .s { color: var(--ink); }
+  .r { color: var(--ink-mute); }
+  .n { color: var(--ink-mute); font-style: italic; }
+
+  /* ── the nine rows ──────────────────────────────────────────────────── */
+  .rows { display: flex; flex-direction: column; gap: 1rem; }
+
+  .row {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr) 13rem;
+    gap: 1.25rem;
+    align-items: start;
+    padding-bottom: 1rem;
+    background: var(--pencil-rule) bottom left / 100% 5px no-repeat;
+  }
+
+  .label { display: flex; flex-direction: column; gap: 0.2rem; }
+  .name { display: flex; align-items: center; gap: 0.6rem; }
+  .dab {
+    width: 10px; height: 10px; flex: none;
+    border-radius: 55% 45% 50% 50% / 50% 55% 45% 50%;
+    background: var(--accent); box-shadow: 1px 1px 1px rgba(38,38,35,0.2);
+  }
+  .name b { font-family: var(--hand); font-weight: 500; font-size: 22px; line-height: 1; color: var(--pencil); }
+  .body {
+    font-family: var(--hand); font-size: 15px; line-height: 1.15; color: var(--pencil);
+    opacity: 0.85; padding-left: 1.2rem;
+  }
+
+  .prompt {
+    margin: 0;
+    font-family: var(--serif); font-size: 12px; line-height: 1.75; color: var(--ink-2);
+    max-width: 60ch;
+  }
+  .prompt .note {
+    display: block; margin-top: 0.4rem;
+    font-family: var(--hand); font-size: 15px; line-height: 1.2; color: var(--pencil);
+    transform: rotate(-0.5deg); transform-origin: left;
+  }
+
+  /* what comes back: two seconds bought, this much kept; the browser's own
+   * balance on top */
+  .keep { display: flex; flex-direction: column; gap: 0.35rem; }
+  .keep .cap { margin-bottom: 0.1rem; }
+  .bar { position: relative; height: 14px; width: 100%; }
+  .bar .bought {
+    position: absolute; inset: 4px 0; border-radius: 3px;
+    box-shadow: inset 0 0 0 1px var(--slot-line); background: var(--slot-fill);
+  }
+  .bar .kept {
+    position: absolute; top: 0; bottom: 0; left: 0;
+    width: calc(var(--keep) / 2 * 100%);
+    background: var(--accent);
+    border-radius: 3px 5px 4px 3px;
+    box-shadow: 1px 2px 2px rgba(38,38,35,0.22);
+    transform: rotate(-0.4deg);
+  }
+  .nums {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.08em; color: var(--ink-soft);
+    font-variant-numeric: tabular-nums; display: flex; justify-content: space-between; gap: 0.5rem;
+  }
+  .nums i { font-style: normal; color: var(--ink-mute); }
+  .browser {
+    font-family: var(--hand); font-size: 14.5px; line-height: 1.2; color: var(--pencil); opacity: 0.85;
+  }
+
+  /* ── the trim pass ──────────────────────────────────────────────────── */
+  .pass { margin-top: 3rem; }
+  .pass h2 {
+    margin: 0 0 0.25rem;
+    font-family: var(--hand); font-weight: 500; font-size: 1.75rem; line-height: 1; color: var(--pencil);
+    transform: rotate(-1deg); transform-origin: left bottom; display: inline-block;
+  }
+  .pass .wrap { overflow-x: auto; margin-top: 0.75rem; }
+  .pass svg { display: block; width: 100%; min-width: 760px; height: auto; }
+
+  .caption {
+    margin: 3rem 0 0; text-align: center;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.38em; color: var(--ink-soft);
+    padding-bottom: 0.625rem; width: fit-content; margin-inline: auto;
+    background: var(--crayon-rule) center bottom / 100% 8px no-repeat;
+  }
+  .small {
+    margin: 0.75rem 0 0; text-align: center;
+    font-family: var(--mono); font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase;
+    line-height: 1.8; color: var(--ink-mute);
+  }
+  .small a { text-decoration: none; border-bottom: 1px solid var(--hair); }
+
+  @media (max-width: 760px) {
+    .row { grid-template-columns: 1fr; gap: 0.6rem; }
+    .body { padding-left: 1.2rem; }
+    .keep { max-width: 20rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="sheet">
+
+  <div class="sheet-head">
+    <h1 class="sheet-title">Nine bodies, nine strikes</h1>
+    <p class="sheet-note">Every sound on the board is one strike on the material the row is named for. The prompt is a physical description of that strike, and what changes from body to body is what the fire did to it: how hot it went, and so how long it rings.</p>
+  </div>
+
+  <!-- ── the kiln: the nine bodies from unfired to vitrified ───────────── -->
+  <figure class="axis">
+    <svg viewBox="0 0 960 150" role="img" aria-label="The nine bodies placed along one line from unfired clay, which is dead, to porcelain, which rings like glass. Four brackets group them: unfired, low-fired, dense, vitrified." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="wob" x="-2%" y="-40%" width="104%" height="180%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="5"/>
+          <feDisplacementMap in="SourceGraphic" scale="2.4"/>
+        </filter>
+        <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" orient="auto">
+          <path d="M1 1.5 C 4 3, 6 4, 9 5 C 6 6, 4 7, 1 8.5" fill="none" stroke="#B79A46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+
+      <!-- the crayon line: cold to hot -->
+      <path filter="url(#wob)" d="M40 78 C 260 74, 560 82, 900 77" fill="none" stroke="#B79A46" stroke-width="3" stroke-linecap="round" opacity="0.85" marker-end="url(#ah)"/>
+      <text class="hand-t" x="40" y="60" text-anchor="start">dead</text>
+      <text class="hand-t" x="920" y="60" text-anchor="end">rings like glass</text>
+
+      <!-- the nine, in kiln order -->
+      <g>
+        <ellipse cx="90"  cy="78" rx="6" ry="5.5" fill="#b08d2e" transform="rotate(-8 90 78)"/>
+        <text class="hand-t" x="90" y="106" text-anchor="middle">clay</text>
+        <ellipse cx="190" cy="78" rx="6" ry="5.5" fill="#bc6a48" transform="rotate(12 190 78)"/>
+        <text class="hand-t" x="190" y="106" text-anchor="middle">terracotta</text>
+        <ellipse cx="290" cy="78" rx="6" ry="5.5" fill="#c4735a" transform="rotate(-14 290 78)"/>
+        <text class="hand-t" x="290" y="106" text-anchor="middle">earthenware</text>
+        <ellipse cx="390" cy="78" rx="6" ry="5.5" fill="#7f9183" transform="rotate(6 390 78)"/>
+        <text class="hand-t" x="390" y="106" text-anchor="middle">pottery</text>
+        <ellipse cx="490" cy="78" rx="6" ry="5.5" fill="#6e6a62" transform="rotate(-10 490 78)"/>
+        <text class="hand-t" x="490" y="106" text-anchor="middle">stoneware</text>
+        <ellipse cx="590" cy="78" rx="6" ry="5.5" fill="#a08b72" transform="rotate(16 590 78)"/>
+        <text class="hand-t" x="590" y="106" text-anchor="middle">ceramic</text>
+        <ellipse cx="690" cy="78" rx="6" ry="5.5" fill="#2a9da3" transform="rotate(-6 690 78)"/>
+        <text class="hand-t" x="690" y="106" text-anchor="middle">faience</text>
+        <ellipse cx="790" cy="78" rx="6" ry="5.5" fill="#4a5ea8" transform="rotate(10 790 78)"/>
+        <text class="hand-t" x="790" y="106" text-anchor="middle">fritware</text>
+        <ellipse cx="880" cy="78" rx="6" ry="5.5" fill="#7a8fb8" transform="rotate(-12 880 78)"/>
+        <text class="hand-t" x="880" y="106" text-anchor="middle">porcelain</text>
+      </g>
+
+      <!-- the brackets: what the fire did -->
+      <g fill="none" stroke="#55534C" stroke-width="1.1" stroke-linecap="round" opacity="0.7" filter="url(#wob)">
+        <path d="M62 124 C 66 131, 70 131, 74 132 L 106 132 C 111 131, 114 131, 118 124"/>
+        <path d="M160 124 C 164 131, 168 131, 172 132 L 408 132 C 413 131, 416 131, 420 124"/>
+        <path d="M462 124 C 466 131, 470 131, 474 132 L 506 132 C 511 131, 514 131, 518 124"/>
+        <path d="M560 124 C 564 131, 568 131, 572 132 L 898 132 C 903 131, 906 131, 910 124"/>
+      </g>
+      <text class="cap-t" x="90"  y="146" text-anchor="middle">unfired</text>
+      <text class="cap-t" x="290" y="146" text-anchor="middle">low-fired · porous · thuds</text>
+      <text class="cap-t" x="490" y="146" text-anchor="middle">dense · clunks</text>
+      <text class="cap-t" x="735" y="146" text-anchor="middle">vitrified · very nearly glass · rings</text>
+    </svg>
+    <figcaption>The board's nine tracks laid along the one thing the prompts lean on: firing temperature and porosity decide how long a struck pot rings. The rows below run in this order, deadest to brightest, so the sheet reads top to bottom as a kiln.</figcaption>
+  </figure>
+
+  <!-- ── how a prompt is built ─────────────────────────────────────────── -->
+  <div class="key" aria-label="How to read the marked prompts">
+    <span class="lead">every prompt has the same four parts:</span>
+    <span class="k"><span class="o">what is struck</span></span>
+    <span class="k"><span class="w">with what</span></span>
+    <span class="k"><span class="s">how it sounds, and for how long</span></span>
+    <span class="k"><span class="r">the room: close-miked, one hit, then silence</span></span>
+    <span class="k"><span class="n">the don'ts</span></span>
+  </div>
+
+  <!-- ── the nine ──────────────────────────────────────────────────────── -->
+  <div class="rows">
+
+    <div class="row" style="--accent:#b08d2e; --keep:0.5">
+      <div class="label">
+        <div class="name"><span class="dab"></span><b>clay</b></div>
+        <div class="body">unfired, still wet. all transient, no body to ring</div>
+      </div>
+      <p class="prompt"><span class="s">One single slap on</span> <span class="o">a large lump of wet unfired clay</span> <span class="w">with a flat palm</span>. <span class="s">A dead, muffled, low thud with absolutely no ring and no resonance. Very short.</span> <span class="r">Close-miked in a dry studio, one hit only, then silence.</span> <span class="n">No music, no reverb, no room tone.</span></p>
+      <div class="keep">
+        <span class="cap">bought 2.0 s, kept</span>
+        <div class="bar"><div class="bought"></div><div class="kept"></div></div>
+        <div class="nums"><span>0.50 s</span><i>2.0 s</i></div>
+        <div class="browser">in the browser: 0 dB, pitch wanders ±7%</div>
+      </div>
+    </div>
+
+    <div class="row" style="--accent:#bc6a48; --keep:0.3">
+      <div class="label">
+        <div class="name"><span class="dab"></span><b>terracotta</b></div>
+        <div class="body">low-fired, unglazed, thick. the deadest fired body</div>
+      </div>
+      <p class="prompt"><span class="s">One single dull knock on</span> <span class="o">a thick unglazed terracotta flowerpot</span> <span class="w">with a soft wooden mallet</span>, <span class="r">starting at the very first instant of the recording.</span> <span class="s">A completely dead, dry, muted low thud that stops almost instantly.</span> <span class="n">No ring, no buzz, no rattle, no metallic tail, no echo.</span> <span class="r">Recorded loud and close in a dry studio, one hit only, then silence.</span> <span class="n">No music, no reverb, no room tone.</span></p>
+      <div class="keep">
+        <span class="cap">bought 2.0 s, kept</span>
+        <div class="bar"><div class="bought"></div><div class="kept"></div></div>
+        <div class="nums"><span>0.30 s</span><i>2.0 s</i></div>
+        <div class="browser">in the browser: −1 dB, wanders ±5%</div>
+      </div>
+    </div>
+
+    <div class="row" style="--accent:#c4735a; --keep:0.45">
+      <div class="label">
+        <div class="name"><span class="dab"></span><b>earthenware</b></div>
+        <div class="body">low-fired, porous. hollow, so it has a little ring</div>
+      </div>
+      <p class="prompt"><span class="s">Knocking once on</span> <span class="o">a thick unglazed earthenware water jug</span> <span class="w">with a knuckle</span>. <span class="s">A dull hollow woody knock with a low ringing body that fades over a quarter of a second.</span> <span class="r">Close-miked, then silence.</span></p>
+      <div class="keep">
+        <span class="cap">bought 2.0 s, kept</span>
+        <div class="bar"><div class="bought"></div><div class="kept"></div></div>
+        <div class="nums"><span>0.45 s</span><i>2.0 s</i></div>
+        <div class="browser">in the browser: −1.5 dB, wanders ±5%</div>
+      </div>
+    </div>
+
+    <div class="row" style="--accent:#7f9183; --keep:0.55">
+      <div class="label">
+        <div class="name"><span class="dab"></span><b>pottery</b></div>
+        <div class="body">a big empty pot. hollow and damped at once</div>
+      </div>
+      <p class="prompt"><span class="s">One single hard knock on</span> <span class="o">a large empty clay pot</span> <span class="w">with the knuckles</span>, <span class="r">starting at the very first instant of the recording.</span> <span class="s">A short, dry, low-pitched hollow thump that decays fast and is completely silent within half a second. Tight and damped, not resonant,</span> <span class="n">no long tail, no rumble.</span> <span class="r">Recorded loud and close in a dry studio, one hit only, then silence.</span> <span class="n">No music, no reverb, no room tone, no background hiss.</span></p>
+      <div class="keep">
+        <span class="cap">bought 2.0 s, kept</span>
+        <div class="bar"><div class="bought"></div><div class="kept"></div></div>
+        <div class="nums"><span>0.55 s</span><i>2.0 s</i></div>
+        <div class="browser">in the browser: −2 dB, wanders ±5%</div>
+      </div>
+    </div>
+
+    <div class="row" style="--accent:#6e6a62; --keep:0.3">
+      <div class="label">
+        <div class="name"><span class="dab"></span><b>stoneware</b></div>
+        <div class="body">dense enough to clunk. described as stone, because that is what landed</div>
+      </div>
+      <p class="prompt"><span class="w">A hammer</span> <span class="s">strikes</span> <span class="o">a large granite block</span> <span class="s">once. One short, dry, hard stone knock,</span> <span class="r">close-miked, then silence.</span>
+        <span class="note">the pot versions came back as two seconds of quiet wash. short, positive, physical is what works.</span></p>
+      <div class="keep">
+        <span class="cap">bought 2.0 s, kept</span>
+        <div class="bar"><div class="bought"></div><div class="kept"></div></div>
+        <div class="nums"><span>0.30 s</span><i>2.0 s</i></div>
+        <div class="browser">in the browser: −1 dB, wanders ±3.5%</div>
+      </div>
+    </div>
+
+    <div class="row" style="--accent:#a08b72; --keep:0.45">
+      <div class="label">
+        <div class="name"><span class="dab"></span><b>ceramic</b></div>
+        <div class="body">glazed. the glass on top is what tinks</div>
+      </div>
+      <p class="prompt"><span class="s">Tapping</span> <span class="o">a glazed ceramic bowl</span> <span class="s">once</span> <span class="w">with a metal spoon</span>. <span class="s">A clean bright tink with a clear ringing tone that fades over a third of a second.</span> <span class="r">Close-miked, then silence.</span></p>
+      <div class="keep">
+        <span class="cap">bought 2.0 s, kept</span>
+        <div class="bar"><div class="bought"></div><div class="kept"></div></div>
+        <div class="nums"><span>0.45 s</span><i>2.0 s</i></div>
+        <div class="browser">in the browser: −3 dB, wanders ±3%</div>
+      </div>
+    </div>
+
+    <div class="row" style="--accent:#2a9da3; --keep:0.3">
+      <div class="label">
+        <div class="name"><span class="dab"></span><b>faience</b></div>
+        <div class="body">quartz body under glaze. small, hard, high</div>
+      </div>
+      <p class="prompt"><span class="s">Tapping</span> <span class="o">a small hard glazed faience tile</span> <span class="s">once</span> <span class="w">with a fingernail</span>. <span class="s">A short bright glassy tick with a light high ring.</span> <span class="r">Close-miked, then silence.</span></p>
+      <div class="keep">
+        <span class="cap">bought 2.0 s, kept</span>
+        <div class="bar"><div class="bought"></div><div class="kept"></div></div>
+        <div class="nums"><span>0.30 s</span><i>2.0 s</i></div>
+        <div class="browser">in the browser: −4 dB, wanders ±2.5%</div>
+      </div>
+    </div>
+
+    <div class="row" style="--accent:#4a5ea8; --keep:0.7">
+      <div class="label">
+        <div class="name"><span class="dab"></span><b>fritware</b></div>
+        <div class="body">ground glass in the body. thin, brittle, the sharpest</div>
+      </div>
+      <p class="prompt"><span class="s">One single tap on</span> <span class="o">a thin flat fritware tile</span> <span class="w">with a small metal rod</span>. <span class="s">A very high, brittle, glassy ping, thin and sharp, with a quick shimmering decay.</span> <span class="r">Close-miked in a dry studio, one hit only, then silence.</span> <span class="n">No music, no reverb, no room tone.</span></p>
+      <div class="keep">
+        <span class="cap">bought 2.0 s, kept</span>
+        <div class="bar"><div class="bought"></div><div class="kept"></div></div>
+        <div class="nums"><span>0.70 s</span><i>2.0 s</i></div>
+        <div class="browser">in the browser: −5 dB, wanders ±2%</div>
+      </div>
+    </div>
+
+    <div class="row" style="--accent:#7a8fb8; --keep:1.1">
+      <div class="label">
+        <div class="name"><span class="dab"></span><b>porcelain</b></div>
+        <div class="body">fully vitrified. the longest ring on the board</div>
+      </div>
+      <p class="prompt"><span class="s">One single light tap on</span> <span class="o">the rim of a thin white porcelain teacup</span> <span class="w">with a metal spoon</span>. <span class="s">A bright glassy ping with a clear bell-like ring that decays smoothly.</span> <span class="r">Close-miked in a dry studio, one hit only, then silence.</span> <span class="n">No music, no reverb, no room tone.</span></p>
+      <div class="keep">
+        <span class="cap">bought 2.0 s, kept</span>
+        <div class="bar"><div class="bought"></div><div class="kept"></div></div>
+        <div class="nums"><span>1.10 s</span><i>2.0 s</i></div>
+        <div class="browser">in the browser: −4 dB, wanders ±1.5%</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── from the prompt to the pad ────────────────────────────────────── -->
+  <figure class="pass">
+    <h2>from the prompt to the pad</h2>
+    <div class="wrap">
+      <svg viewBox="0 0 1000 250" role="img" aria-label="The path from prompt to sample: the prompt goes to the sound generation API asking for two seconds at prompt influence 0.75; an mp3 comes back with the hit somewhere in it; the trimmer finds the first event within 6 dB of the loudest and walks back to the foot of its attack; the clip is cut to the kept length, faded in over 3 ms and out over 40 ms, normalised to minus 1 dB, and written as a mono 44.1 kHz WAV; in the browser each hit is balanced by a per-material trim and its pitch wanders a little on every strike." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="wob2" x="-2%" y="-30%" width="104%" height="160%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="11"/>
+          <feDisplacementMap in="SourceGraphic" scale="2"/>
+        </filter>
+        <marker id="pa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+          <path d="M1 1.5 C 4 3, 6 4, 9 5 C 6 6, 4 7, 1 8.5" fill="none" stroke="#55534C" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+
+      <!-- stations, as pencilled slots -->
+      <g fill="rgba(60,58,52,0.065)" stroke="rgba(60,58,52,0.30)" stroke-width="1" filter="url(#wob2)">
+        <rect x="20"  y="60" width="150" height="72" rx="14"/>
+        <rect x="230" y="60" width="150" height="72" rx="14"/>
+        <rect x="440" y="40" width="300" height="112" rx="14"/>
+        <rect x="800" y="60" width="180" height="72" rx="14"/>
+      </g>
+
+      <!-- arrows, labelled -->
+      <g fill="none" stroke="#55534C" stroke-width="1.2" stroke-linecap="round" marker-end="url(#pa)" filter="url(#wob2)">
+        <path d="M172 96 C 190 94, 205 98, 226 96"/>
+        <path d="M382 96 C 400 94, 415 98, 436 96"/>
+        <path d="M742 96 C 760 94, 775 98, 796 96"/>
+      </g>
+      <text class="cap-t" x="199" y="84" text-anchor="middle">2.0 s</text>
+      <text class="cap-t" x="409" y="84" text-anchor="middle">mp3</text>
+      <text class="cap-t" x="769" y="84" text-anchor="middle">wav</text>
+
+      <!-- 1: the prompt -->
+      <text class="hand-t" x="95" y="90" text-anchor="middle">the prompt</text>
+      <text class="serif-t" x="95" y="110" text-anchor="middle">one strike, described</text>
+      <text class="cap-t" x="95" y="150" text-anchor="middle">≤ 450 chars</text>
+
+      <!-- 2: the API -->
+      <text class="hand-t" x="305" y="90" text-anchor="middle">sound generation</text>
+      <text class="serif-t" x="305" y="110" text-anchor="middle">prompt influence 0.75</text>
+      <text class="cap-t" x="305" y="150" text-anchor="middle">room to place the hit</text>
+
+      <!-- 3: the trimmer, with the waveform inside -->
+      <text class="hand-t" x="590" y="62" text-anchor="middle">find the attack, cut to length</text>
+      <!-- a sketched envelope: quiet lead-in, the hit, a bounce, the tail -->
+      <path d="M458 118 L 486 117 L 500 118 L 512 116 L 520 118 L 526 84 L 531 128 L 536 92 L 541 122 L 548 104 L 556 114 L 566 108 L 580 116 L 600 113 L 614 119 L 622 100 L 628 124 L 636 110 L 650 117 L 690 118 L 722 118"
+            fill="none" stroke="#2B2A26" stroke-width="1.1" stroke-linejoin="round" opacity="0.8"/>
+      <!-- the cut: onset to keep -->
+      <line x1="522" y1="72" x2="522" y2="138" stroke="#C9583A" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <line x1="640" y1="72" x2="640" y2="138" stroke="#C9583A" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <path d="M522 76 C 560 70, 600 70, 640 76" fill="none" stroke="#C9583A" stroke-width="1.2" stroke-linecap="round"/>
+      <text class="hand-t" x="581" y="81" text-anchor="middle" style="fill:#C9583A; font-size:14px">kept</text>
+      <text class="cap-t" x="522" y="148" text-anchor="middle">onset</text>
+      <text class="cap-t" x="640" y="148" text-anchor="middle">keep</text>
+      <text class="cap-t" x="736" y="148" text-anchor="end">dropped</text>
+
+      <!-- 4: the browser -->
+      <text class="hand-t" x="890" y="90" text-anchor="middle">the pad</text>
+      <text class="serif-t" x="890" y="110" text-anchor="middle">per-material trim, dB</text>
+      <text class="cap-t" x="890" y="150" text-anchor="middle">pitch wanders every hit</text>
+
+      <!-- the rules of the cut, in the margin -->
+      <g class="hand-t">
+        <text x="440" y="188" style="font-size:15px">onset = the first event within 6 dB of the loudest, walked back to the foot of its attack</text>
+        <text x="440" y="210" style="font-size:15px">then: fade in 3 ms, fade out 40 ms, peak to −1 dB, mono 44.1 kHz</text>
+        <text x="440" y="232" style="font-size:15px">a clip that needs more than +25 dB of make-up gain had no strike in it. regenerate.</text>
+      </g>
+      <text class="serif-t" x="20" y="188" style="font-style:italic">Ask for the half-second you want and you get</text>
+      <text class="serif-t" x="20" y="206" style="font-style:italic">ambience with no event in it. Buy two seconds,</text>
+      <text class="serif-t" x="20" y="224" style="font-style:italic">let the trimmer find the hit.</text>
+    </svg>
+    </div>
+    <figcaption>Every body takes the same road. Nothing in this pass knows which material it is handling; the difference between a thud and a ping is entirely in the prompt and in how much of the clip is kept.</figcaption>
+  </figure>
+
+  <p class="caption">- Ceramic_Beats -</p>
+  <p class="small">prompts and lengths from pipeline/sounds.py · balance and wander from js/audio.js<br><a href="https://github.com/azuic/CeramicBeats" target="_blank" rel="noopener">github.com/azuic/CeramicBeats</a></p>
+
+</div>
+
+</html>

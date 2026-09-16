@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=IBM+Plex+Mono:wght@400;500&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./index.css?v=5">
+<link rel="stylesheet" href="./index.css?v=6">
 <script src="Tone.js"></script>
 </head>
 <body>
@@ -118,15 +118,31 @@
         44,354 of them to draw from.
       </p>
       <p>
-        The sounds are strikes on the nine bodies themselves. What separates them is
-        what separates the materials: how hot each was fired, and so how long it
-        rings. Unfired clay is dead, terracotta thuds, and the vitrified bodies —
-        porcelain, faience, fritware — ring like the glass they very nearly are.
+        The sounds are strikes on the nine bodies themselves, generated with the
+        ElevenLabs sound-effects API from a physical description of each fired body
+        being hit. What separates them is what separates the materials: how hot each
+        was fired, and so how long it rings. Unfired clay is dead, terracotta thuds,
+        and the vitrified bodies — porcelain, faience, fritware — ring like the glass
+        they very nearly are.
+      </p>
+      <p class="about-more">
+        <button id="strikesBtn" class="about-link" type="button" aria-haspopup="dialog">
+          How each body becomes a prompt <svg class="hand-arrow"><use href="#i-arrow-hand"/></svg>
+        </button>
       </p>
       <p class="about-hint">Hover a tile to see the object · ⌥-click to open it at The Met</p>
     </div>
   </div>
 </footer>
+
+<!-- The strike sheet, opened from the about panel: nine bodies, nine prompts. It
+     is its own page, strikes.html, held in a frame so its paper stays its own. -->
+<div id="strikesModal" class="modal" hidden role="dialog" aria-modal="true" aria-label="Nine bodies, nine strikes">
+  <div class="modal-sheet">
+    <button id="strikesClose" class="modal-close" type="button" aria-label="Close">close ×</button>
+    <iframe class="modal-frame" title="Nine bodies, nine strikes" loading="lazy"></iframe>
+  </div>
+</div>
 
 <div id="tooltip" class="tooltip" hidden></div>
 <div id="toast" class="toast" hidden></div>
@@ -136,6 +152,6 @@
 <script src="js/audio.js"></script>
 <script src="js/pattern.js"></script>
 <script src="js/ui.js?v=4"></script>
-<script src="js/app.js?v=3"></script>
+<script src="js/app.js?v=4"></script>
 </body>
 </html>

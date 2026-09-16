@@ -725,6 +725,68 @@ main {
   color: var(--ink-mute) !important;
 }
 
+/* a line in the about panel that opens the strike sheet */
+.about-more { margin: 0.75rem 0 0 !important; }
+.about-link {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  border: 0; padding: 0 0.25rem 3px;
+  background: var(--pencil-rule) bottom left / 100% 5px no-repeat;
+  font-family: var(--hand); font-size: 17px; line-height: 1;
+  color: var(--pencil);
+  transform: rotate(-0.8deg);
+  transition: color 0.15s;
+}
+.about-link:hover { color: var(--stamp); }
+.about-link .hand-arrow { width: 1.25rem; height: 1.25rem; color: currentColor; }
+
+/* ── the strike sheet, centred over the board ─────────────────────────── */
+
+.modal {
+  position: fixed; inset: 0;
+  z-index: 70;
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem;
+  background: rgba(43, 42, 38, 0.42);
+  animation: modal-in 0.18s ease-out;
+}
+@keyframes modal-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* the sheet itself: a page of the same stock, a touch off square, with the
+ * grain of the room falling on it */
+.modal-sheet {
+  position: relative;
+  width: min(72rem, 100%);
+  height: min(58rem, 100%);
+  background: var(--paper);
+  box-shadow: 0 30px 80px rgba(38,38,35,0.45), 0 2px 6px rgba(38,38,35,0.25);
+  transform: rotate(-0.3deg);
+  animation: sheet-in 0.22s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@keyframes sheet-in {
+  from { opacity: 0; transform: rotate(-0.3deg) translateY(12px); }
+  to   { opacity: 1; transform: rotate(-0.3deg) translateY(0); }
+}
+.modal-frame {
+  display: block;
+  width: 100%; height: 100%;
+  border: 0;
+  background: var(--paper);
+}
+.modal-close {
+  position: absolute; top: -0.9rem; right: 1.25rem;
+  z-index: 1;
+  padding: 0.3rem 0.75rem;
+  border: 0;
+  background: var(--card);
+  box-shadow: var(--slip-shadow);
+  font-family: var(--hand); font-size: 16px; line-height: 1;
+  color: var(--pencil);
+  transform: rotate(1.5deg);
+  transition: color 0.15s;
+}
+.modal-close:hover { color: var(--stamp); }
+.modal-close:focus-visible { outline: 1.5px solid var(--stamp); outline-offset: 2px; }
+
 /* ── overlays ──────────────────────────────────────────────────────────── */
 
 /* The catalogue card for the object under the cursor: a small slip, its
@@ -787,7 +849,7 @@ main {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .about-panel, .toast { animation: none; }
+  .about-panel, .toast, .modal, .modal-sheet { animation: none; }
   .pad, .pad-face { transition: none; }
 }
 
@@ -797,6 +859,8 @@ main {
   .transport { order: 3; width: 100%; justify-content: center; }
 }
 @media (max-width: 820px) {
+  .modal { padding: 0.75rem; }
+  .modal-close { right: 0.75rem; }
   :root { --label-w: 96px; --pad-gap: 0.3rem; --row-gap: 0.3rem; --edge: 1rem; --chrome: 30rem; }
   .label-count { display: none; }
   .sheet-note { display: none; }

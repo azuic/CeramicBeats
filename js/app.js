@@ -163,10 +163,37 @@
     if (e.key === 'Escape') closeAbout();
   });
 
+  // ── the strike sheet ─────────────────────────────────────────────────────
+
+  // The sheet is its own page. It is only fetched the first time it is opened,
+  // and #strikes in the URL opens it on arrival, so it can be linked to.
+  const strikesModal = document.getElementById('strikesModal');
+  const strikesFrame = strikesModal.querySelector('.modal-frame');
+  const strikesBtn = document.getElementById('strikesBtn');
+
+  function openStrikes() {
+    if (!strikesFrame.getAttribute('src')) strikesFrame.src = 'strikes.html';
+    closeAbout();
+    strikesModal.hidden = false;
+    document.getElementById('strikesClose').focus();
+  }
+  function closeStrikes() {
+    if (strikesModal.hidden) return;
+    strikesModal.hidden = true;
+    strikesBtn.focus();
+  }
+
+  strikesBtn.addEventListener('click', e => { e.stopPropagation(); openStrikes(); });
+  document.getElementById('strikesClose').addEventListener('click', closeStrikes);
+  strikesModal.addEventListener('click', e => { if (e.target === strikesModal) closeStrikes(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeStrikes(); });
+  if (location.hash === '#strikes') openStrikes();
+
   // ── keys ────────────────────────────────────────────────────────────────
 
   document.addEventListener('keydown', e => {
     if (e.target.matches('input, textarea, [contenteditable]')) return;
+    if (!strikesModal.hidden) return;
     if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
   });
 
