@@ -855,15 +855,16 @@ main {
   .pad, .pad-face { transition: none; }
 }
 
-@media (max-width: 1180px) {
-  :root { --chrome: 27rem; }
-  .topbar { flex-wrap: wrap; }
-  .transport { order: 3; width: 100%; justify-content: center; }
+/* A narrower window keeps the transport where it is; Reshuffle and Save
+ * Beat give up their words and keep their icons. */
+@media (max-width: 1100px) {
+  .key-label { display: none; }
+  #shuffleBtn, #saveBtn { padding: 0 10px; }
 }
 @media (max-width: 820px) {
   .modal { padding: 0.75rem; }
   .modal-close { right: 0.75rem; }
-  :root { --label-w: 96px; --pad-gap: 0.3rem; --row-gap: 0.3rem; --edge: 1rem; --chrome: 30rem; }
+  :root { --label-w: 96px; --pad-gap: 0.3rem; --row-gap: 0.3rem; --edge: 1rem; --chrome: 26rem; }
   .label-count { display: none; }
   .sheet-note { display: none; }
   .swatch-name { font-size: 1.875rem; }
@@ -899,7 +900,7 @@ main {
 @media (max-height: 520px) {
   :root { --edge: 0.75rem; --pad-gap: 0.25rem; --row-gap: 0.25rem; --label-w: 88px; --chrome: 8.5rem; }
   .topbar { padding: 0.5rem var(--edge) 0.25rem; flex-wrap: nowrap; gap: 0.75rem; }
-  .transport { order: 0; width: auto; gap: 0.625rem; }
+  .transport { gap: 0.625rem; }
   .t-play { width: 1.75rem; height: 1.75rem; }
   .t-play .icon { width: 0.875rem; height: 0.875rem; }
   .t-stop { width: 1.5rem; height: 1.5rem; }

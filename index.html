@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=IBM+Plex+Mono:wght@400;500&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./index.css?v=8">
+<link rel="stylesheet" href="./index.css?v=9">
 <script src="Tone.js"></script>
 </head>
 <body>
@@ -52,8 +52,8 @@
   </div>
 
   <div class="actions">
-    <button id="shuffleBtn" class="key" title="Draw a different set of objects">
-      <svg class="icon icon-sm"><use href="#i-shuffle"/></svg> Reshuffle
+    <button id="shuffleBtn" class="key" title="Reshuffle: draw a different set of objects" aria-label="Reshuffle">
+      <svg class="icon icon-sm"><use href="#i-shuffle"/></svg><span class="key-label">Reshuffle</span>
     </button>
     <div class="menu-wrap">
       <button id="presetBtn" class="key" aria-haspopup="true" aria-expanded="false">
@@ -61,8 +61,8 @@
       </button>
       <div id="presetMenu" class="menu" hidden></div>
     </div>
-    <button id="saveBtn" class="key key--ink">
-      <svg class="icon icon-sm"><use href="#i-save"/></svg> Save Beat
+    <button id="saveBtn" class="key key--ink" title="Save Beat: copy a link to this beat" aria-label="Save Beat">
+      <svg class="icon icon-sm"><use href="#i-save"/></svg><span class="key-label">Save Beat</span>
     </button>
   </div>
 </header>
