@@ -35,12 +35,13 @@
   --row-gap: 0.5rem;
   --edge: 2rem;          /* the sheet's margin, page edge to the first mark */
   --chrome: 23rem;       /* header, title, playhead, foot and status stacked: what the slots must leave */
+  --vh: 100vh;           /* the visible height; on a phone, 100vh counts the browser bars as if hidden */
 
   /* A slot is as big as the width allows, unless the height allows less: the
    * grid should fill the sheet without the sheet having to scroll. */
   --pad: max(18px, min(
     calc((100vw - 2 * var(--edge) - var(--label-w) - 1rem - 15 * var(--pad-gap)) / 16),
-    calc((100vh - var(--chrome)) / 9 - var(--row-gap))
+    calc((var(--vh) - var(--chrome)) / 9 - var(--row-gap))
   ));
 
   --mono:  'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -62,13 +63,16 @@
   --crayon-line: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 10' preserveAspectRatio='none'><filter id='c' x='-5%25' y='-40%25' width='110%25' height='180%25'><feTurbulence type='fractalNoise' baseFrequency='0.08' numOctaves='2' seed='3'/><feDisplacementMap in='SourceGraphic' scale='3'/></filter><path filter='url(%23c)' d='M3 5.5 C 50 2.5, 90 7.5, 130 4.5 S 180 3.5, 197 5.5' fill='none' stroke='%23B79A46' stroke-width='3' stroke-linecap='round' vector-effect='non-scaling-stroke' opacity='0.85'/></svg>");
 }
 
+@supports (height: 100svh) { :root { --vh: 100svh; } }
+
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body { height: 100%; overflow: hidden; }
+html { background: var(--paper); }
 
 body {
   margin: 0;
-  min-height: 100vh;
+  min-height: var(--vh);
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -896,6 +900,8 @@ main {
     background: var(--paper);
     text-align: center;
   }
+  /* 100vh on a phone is taller than what shows; the sheet beneath would peek out under the browser bar */
+  body > :not(.turn) { visibility: hidden; }
   .turn-phone { width: 4.5rem; height: 4.5rem; color: var(--pencil); animation: turn-over 2.4s ease-in-out infinite; }
   .turn p { margin: 0; font-family: var(--hand); font-size: 1.75rem; line-height: 1.1; color: var(--pencil); transform: rotate(-2deg); }
   .turn small { font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-mute); }
@@ -911,6 +917,8 @@ main {
 
 @media (max-height: 520px) {
   :root { --edge: 0.75rem; --pad-gap: 0.25rem; --row-gap: 0.25rem; --label-w: 88px; --chrome: 8.5rem; }
+  /* if the browser bars leave too little height even at the smallest slot, the sheet scrolls rather than clips */
+  html, body { height: auto; min-height: var(--vh); overflow: auto; }
   .topbar { padding: 0.5rem var(--edge) 0.25rem; flex-wrap: nowrap; gap: 0.75rem; }
   .transport { gap: 0.625rem; }
   .t-play { width: 1.75rem; height: 1.75rem; }
@@ -938,5 +946,5 @@ main {
   .about-cta { font-size: 13px; }
   .fotd { display: none; }
   .about-wrap { margin-right: 0; }
-  .about-panel { max-height: calc(100vh - 3rem); overflow: auto; padding: 1rem 1.125rem; }
+  .about-panel { max-height: calc(var(--vh) - 3rem); overflow: auto; padding: 1rem 1.125rem; }
 }
