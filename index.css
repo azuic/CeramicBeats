@@ -72,10 +72,6 @@ html { background: var(--paper); }
 
 body {
   margin: 0;
-  min-height: var(--vh);
-  width: 100%;
-  display: flex;
-  flex-direction: column;
   background: var(--paper);
   font-family: var(--mono);
   color: var(--ink);
@@ -106,6 +102,15 @@ body::after {
   mix-blend-mode: multiply;
   pointer-events: none;
   z-index: 100;
+}
+
+/* The stage: the page as one piece, header to foot. On a phone held upright
+ * it is turned a quarter turn as a whole (see the end of this file). */
+#stage {
+  width: 100%;
+  min-height: var(--vh);
+  display: flex;
+  flex-direction: column;
 }
 
 ::selection { background: var(--stamp); color: var(--paper); }
@@ -886,36 +891,9 @@ main {
 /* the About link moves in off the corner to leave the ribbon its room */
 .about-wrap { margin-right: 5.5rem; }
 
-/* ── a phone held upright ──────────────────────────────────────────────── */
-
-/* The board is sixteen slots wide and nine deep; upright, a phone has no
- * room for it. Instead of a board that scrolls, a note on the sheet asks for
- * the other way round. */
-.turn { display: none; }
-@media (max-width: 820px) and (orientation: portrait) {
-  .turn {
-    position: fixed; inset: 0; z-index: 90;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 1.25rem; padding: 2rem;
-    background: var(--paper);
-    text-align: center;
-  }
-  /* 100vh on a phone is taller than what shows; the sheet beneath would peek out under the browser bar */
-  body > :not(.turn) { visibility: hidden; }
-  .turn-phone { width: 4.5rem; height: 4.5rem; color: var(--pencil); animation: turn-over 2.4s ease-in-out infinite; }
-  .turn p { margin: 0; font-family: var(--hand); font-size: 1.75rem; line-height: 1.1; color: var(--pencil); transform: rotate(-2deg); }
-  .turn small { font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-mute); }
-}
-@keyframes turn-over {
-  0%, 20%  { transform: rotate(0deg); }
-  55%, 80% { transform: rotate(-90deg); }
-  100%     { transform: rotate(0deg); }
-}
-@media (prefers-reduced-motion: reduce) { .turn-phone { animation: none; transform: rotate(-90deg); } }
-
 /* ── a phone held sideways: the board with the least chrome that still works ── */
 
-@media (max-height: 520px) {
+@media (max-height: 520px), (max-width: 820px) and (orientation: portrait) {
   :root { --edge: 0.75rem; --pad-gap: 0.25rem; --row-gap: 0.25rem; --label-w: 88px; --chrome: 8.5rem; }
   /* if the browser bars leave too little height even at the smallest slot, the sheet scrolls rather than clips */
   html, body { height: auto; min-height: var(--vh); overflow: auto; }
@@ -947,4 +925,31 @@ main {
   .fotd { display: none; }
   .about-wrap { margin-right: 0; }
   .about-panel { max-height: calc(var(--vh) - 3rem); overflow: auto; padding: 1rem 1.125rem; }
+}
+
+/* ── a phone held upright ──────────────────────────────────────────────── */
+
+/* The board is sixteen slots wide and nine deep; upright, a phone has no
+ * room for it. So the whole stage is turned a quarter turn instead: the
+ * phone stays as it is and the site is drawn sideways across it, whatever
+ * the rotation lock says. The width the board can use is now the screen's
+ * visible height, and the reverse, which is what the slot size is told. */
+@media (max-width: 820px) and (orientation: portrait) {
+  html, body { height: 100%; overflow: hidden; }
+  #stage {
+    position: absolute; top: 0; left: 0;
+    width: var(--vh); height: 100vw; min-height: 0;
+    transform: rotate(90deg) translateY(-100%);
+    transform-origin: top left;
+    overflow: hidden;
+  }
+  :root {
+    --pad: max(18px, min(
+      calc((var(--vh) - 2 * var(--edge) - var(--label-w) - 1rem - 15 * var(--pad-gap)) / 16),
+      calc((100vw - var(--chrome)) / 9 - var(--row-gap))
+    ));
+  }
+  /* the tooltip is placed from the pointer, which does not turn with the page */
+  .tooltip { display: none !important; }
+  .about-panel { max-height: calc(100vw - 3rem); }
 }
