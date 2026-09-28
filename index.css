@@ -923,7 +923,8 @@ main {
   .status-left { display: none; }
   .about-cta { font-size: 13px; }
   .fotd { display: none; }
-  .about-wrap { margin-right: 0; }
+  .about-wrap { margin-right: 0; margin-left: auto; }
+  .about-panel { width: 22rem; max-width: calc(100vw - 2 * var(--edge)); }
   .about-panel { max-height: calc(var(--vh) - 3rem); overflow: auto; padding: 1rem 1.125rem; }
 }
 
@@ -951,5 +952,5 @@ main {
   }
   /* the tooltip is placed from the pointer, which does not turn with the page */
   .tooltip { display: none !important; }
-  .about-panel { max-height: calc(100vw - 3rem); }
+  .about-panel { max-height: calc(100vw - 3rem); max-width: calc(var(--vh) - 2 * var(--edge)); }
 }
