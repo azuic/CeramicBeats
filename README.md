@@ -77,6 +77,8 @@ from a domain root on Vercel and from a project subpath on GitHub Pages.
 Builds the tile art. Needs **Pillow**. It reads its source from
 [the-met-ceramics-lookbook](https://github.com/azuic/the-met-ceramics-lookbook),
 whose `data/` holds a 44,354-object atlas spread across 101 webp sheets (75MB).
+The board draws on 43,295 of those: the atlas also carries 1,059 objects the
+catalogue files as "other/unspecified", which have no row here.
 That location is hardcoded near the top of the script as
 `~/Claude/the-met-ceramics-lookbook`, so edit `LOOKBOOK` if it lives elsewhere.
 
